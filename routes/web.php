@@ -1,12 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\PetaController;
-use App\Http\Controllers\PeringatanController;
-use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\PetaController;
+use App\Http\Controllers\Admin\PeringatanController;
+use App\Http\Controllers\Admin\LaporanController;
 
 
 
@@ -31,22 +31,22 @@ Route::middleware('auth')->group(function () {
 Route::get('/dashboard', [DashboardController::class, 'index']);
     
 // Rute Profil
-Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'index']);
-Route::put('/profile', [\App\Http\Controllers\ProfileController::class, 'update']);
+Route::get('/profile', [\App\Http\Controllers\Admin\ProfileController::class, 'index']);
+Route::put('/profile', [\App\Http\Controllers\Admin\ProfileController::class, 'update']);
 
 // Rute Manajemen Pengguna
-Route::get('/users', [\App\Http\Controllers\UserController::class, 'index']);
-Route::get('/users/create', [\App\Http\Controllers\UserController::class, 'create']);
-Route::post('/users', [\App\Http\Controllers\UserController::class, 'store']);
+Route::get('/users', [\App\Http\Controllers\Admin\UserController::class, 'index']);
+Route::get('/users/create', [\App\Http\Controllers\Admin\UserController::class, 'create']);
+Route::post('/users', [\App\Http\Controllers\Admin\UserController::class, 'store']);
 
 // Rute Hapus Akun User
-Route::delete('/users/{id}', [App\Http\Controllers\UserController::class, 'destroy']);
+Route::delete('/users/{id}', [App\Http\Controllers\Admin\UserController::class, 'destroy']);
 
 // Rute Menampilkan Halaman Edit Data User
-Route::get('/users/{id}/edit', [App\Http\Controllers\UserController::class, 'edit']);
+Route::get('/users/{id}/edit', [App\Http\Controllers\Admin\UserController::class, 'edit']);
 
 // Rute Untuk Memproses Perubahan Data User
-Route::put('/users/{id}', [App\Http\Controllers\UserController::class, 'update']);
+Route::put('/users/{id}', [App\Http\Controllers\Admin\UserController::class, 'update']);
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile/password', [ProfileController::class, 'editPassword']);
