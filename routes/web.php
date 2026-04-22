@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\PetaController;
 use App\Http\Controllers\Admin\PeringatanController;
 use App\Http\Controllers\Admin\LaporanController;
+use App\Http\Controllers\Pengguna\DashboardController as PenggunaDashboard;
 
 
 
@@ -78,5 +79,13 @@ Route::post('/peringatan', [PeringatanController::class, 'store'])->name('pering
 Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
 Route::patch('/laporan/{id}/selesai', [LaporanController::class, 'tandaiSelesai'])->name('laporan.selesai');
 Route::get('/laporan/peta', [LaporanController::class, 'peta'])->name('laporan.peta');
+
+//Rute Pengguna//
+Route::prefix('pengguna')->group(function () {
+    Route::get('/dashboard', [PenggunaDashboard::class, 'index'])->name('pengguna.dashboard');
+    
+    // Nanti kita tambah route laporan & peta di sini
+});
+
 
 });
