@@ -16,7 +16,7 @@ class DashboardController extends Controller
         // Jika yang login adalah MDMC Daerah
         if ($user->role === 'daerah') {
             // Arahkan ke file blade khusus daerah
-            return view('daerah.dashboard', compact('user')); 
+            return view('pengguna.dashboard', compact('user')); 
         }
 
         // Jika yang login adalah MDMC Wilayah (Admin)

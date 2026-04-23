@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beranda - SIMBAMU MDMC Daerah</title>
+    <title>SIMBAMU MDMC Daerah</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -96,7 +96,7 @@
             </button>
             <div class="ms-auto dropdown">
                 <a href="#" class="d-flex align-items-center text-decoration-none text-dark profile-toggle-btn" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="{{ Auth::user()->profile_photo ? asset('storage/' . Auth::user()->profile_photo) : asset('images/logo-mdmc.png') }}" class="profile-img me-2 shadow-sm" style="object-fit: cover; width: 40px; height: 40px; border-radius: 50%;">
+                    <img src="{{ Auth::user()->profile_photo ? asset('storage/' . Auth::user()->profile_photo) : asset('images/logo-mdmc.png') }}" class="profile-img me-2 shadow-sm" style="object-fit: cover;">
                     <i class="fas fa-chevron-down profile-arrow text-muted"></i>
                 </a>
                 
@@ -104,16 +104,16 @@
                     <li class="px-4 py-3 bg-light border-bottom">
                         <span class="d-block text-muted mb-1" style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">Login sebagai:</span>
                         <span class="d-block fw-bold text-dark" style="font-size: 14px; line-height: 1.2;">{{ Auth::user()->name }}</span>
-                        <span class="d-block text-primary fw-medium" style="font-size: 12px;">( Pengguna)</span>
+                        <span class="d-block text-primary fw-medium" style="font-size: 12px;">({{ ucfirst(Auth::user()->role) }})</span>
                     </li>
                     <li>
-                        <a class="dropdown-item py-2 px-4 d-flex align-items-center mt-2" href="/pengguna/profile">
+                        <a class="dropdown-item py-2 px-4 d-flex align-items-center mt-2" href="/profile">
                             <i class="fas fa-user-edit text-muted me-3" style="width: 20px;"></i> <span>Edit Profile</span>
                         </a>
                     </li>
                     <li><hr class="dropdown-divider my-2"></li>
                     <li>
-                        <form action="{{ url('/logout') }}" method="POST">
+                        <form action="{{ route('logout') }}" method="POST">
                             @csrf
                             <button type="submit" class="dropdown-item py-2 px-4 d-flex align-items-center text-danger mb-1">
                                 <i class="fas fa-power-off me-3" style="width: 20px;"></i> <span>Logout</span>
@@ -125,77 +125,12 @@
         </nav>
 
         <div class="container-fluid p-4 flex-grow-1">
-            <div class="row g-4 mb-4">
-                
-                <div class="col-md-5">
-                    <div class="card card-stat bg-gradient-cyan p-4 shadow h-100">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h5 class="fw-bold mb-0">LAPORAN BENCANA</h5>
-                                <h1 class="display-4 fw-bold">{{ $jumlahLaporan ?? 0 }}</h1>
-                                <small class="opacity-75">Data Terkirim ke Wilayah</small>
-                            </div>
-                            <i class="fas fa-clipboard-list fa-4x opacity-50"></i>
-                        </div>
-                    </div>
-                </div>
+            
 
-                <div class="col-md-7">
-                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100 d-flex flex-row align-items-center justify-content-between bg-white">
-                        <div>
-                            <h5 class="fw-bold text-dark mb-1">Ada Kejadian Bencana?</h5>
-                            <p class="text-muted mb-0">Segera buat laporan baru untuk ditindaklanjuti oleh MDMC Wilayah.</p>
-                        </div>
-                        <a href="{{ route('pengguna.laporan.create') }}" class="btn btn-danger px-4 py-2 rounded-pill shadow-sm fw-bold">
-                            <i class="fas fa-plus me-2"></i> Buat Laporan
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card border-0 shadow-sm rounded-4">
-                <div class="card-header bg-white border-0 pt-4 px-4">
-                    <h5 class="fw-bold text-uppercase">Peta Pantauan Cuaca</h5>
-                </div>
-                <div class="card-body p-4">
-                    <iframe width="100%" height="450" src="https://embed.windy.com/config/map?v=20.1.1&lat=-0.026&lon=109.333&zoom=7&level=surface&overlay=wind&product=ecmwf&menu=&message=&marker=&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=default&metricTemp=default&radarRange=-1" frameborder="0" class="rounded-3 shadow-sm"></iframe>
-                    
-                    <div class="text-end mt-3">
-                        <a href="https://www.windy.com" target="_blank" class="btn btn-primary px-4 py-2 rounded-pill shadow">
-                            Analisa Lebih Lanjut <i class="fas fa-external-link-alt ms-2"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
         </div>
-
-        <footer class="text-center py-4 mt-auto">
-            <small class="text-muted">
-                <i class="far fa-copyright"></i> MDMC KALIMANTAN BARAT 2026 - SOLID BERGERAK MONITOR | DIKELOLA OLEH BIDANG DATA DAN INFORMASI
-            </small>
-        </footer>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    const sidebar = document.getElementById('sidebar');
-    const sidebarCollapse = document.getElementById('sidebarCollapse');
-    const closeSidebar = document.getElementById('closeSidebar');
-    const sidebarOverlay = document.getElementById('sidebarOverlay');
-
-    sidebarCollapse.addEventListener('click', () => {
-        sidebar.classList.add('show');
-        sidebarOverlay.classList.add('show');
-    });
-
-    const hideSidebar = () => {
-        sidebar.classList.remove('show');
-        sidebarOverlay.classList.remove('show');
-    };
-
-    closeSidebar.addEventListener('click', hideSidebar);
-    sidebarOverlay.addEventListener('click', hideSidebar);
-</script>
 </body>
 </html>

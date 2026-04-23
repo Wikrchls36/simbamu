@@ -225,7 +225,7 @@
             {{-- 2. TABEL LOG PERINGATAN (Sesuai kodemu) --}}
             <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5">
                 <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-2 d-flex justify-content-between align-items-center flex-wrap gap-2">
-                    <h6 class="fw-bold text-dark m-0">Log Laporan Peringatan</h6>
+                    <h6 class="fw-bold text-dark m-0">Log Instruksi & Peringatan</h6>
                     <div class="input-group" style="max-width: 250px;">
                         <input type="text" id="searchInput" class="form-control form-control-sm rounded-start-pill border-end-0" placeholder="Tuliskan pencarian...">
                         <span class="input-group-text bg-white rounded-end-pill border-start-0 text-muted">
