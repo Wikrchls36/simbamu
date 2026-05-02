@@ -76,12 +76,30 @@ Route::prefix('pengguna')->middleware('auth')->group(function () {
     Route::get('/peringatan', [PenggunaPeringatan::class, 'index'])->name('pengguna.peringatan.index');
     Route::post('/peringatan/konfirmasi/{id}', [PenggunaPeringatan::class, 'konfirmasi'])->name('pengguna.peringatan.konfirmasi');
   
-
-    // Rute Laporan Bencana (Pengguna) <-- TAMBAHKAN INI
+    // Rute Dashboard & Log Laporan
     Route::get('/laporan', [PenggunaLaporan::class, 'index'])->name('pengguna.laporan.index');
+
+    // Rute Buat Laporan Baru
     Route::get('/laporan/create', [PenggunaLaporan::class, 'create'])->name('pengguna.laporan.create');
-    Route::post('/laporan', [PenggunaLaporan::class, 'store'])->name('pengguna.laporan.store');
+    Route::post('/laporan/store', [PenggunaLaporan::class, 'store'])->name('pengguna.laporan.store');
+
+    // Rute Peta (Pindahkan ke /laporan/peta agar seragam)
+    Route::get('/laporan/peta', [PenggunaLaporan::class, 'peta'])->name('pengguna.laporan.peta');
+
+    Route::get('/laporan/{id}/update', [App\Http\Controllers\Pengguna\LaporanController::class, 'createUpdate'])->name('pengguna.laporan.update_create');
+    Route::post('/laporan/{id}/update', [App\Http\Controllers\Pengguna\LaporanController::class, 'storeUpdate'])->name('pengguna.laporan.update_store');
+
+    // Rute untuk melihat halaman detail laporan & pagination SitRep
+    Route::get('/laporan/{id}/detail', [App\Http\Controllers\Pengguna\LaporanController::class, 'show'])->name('pengguna.laporan.show');
+
+    // Rute asli untuk mendownload PDF
+    Route::get('/laporan/sitrep/{update_id}/pdf', [App\Http\Controllers\Pengguna\LaporanController::class, 'downloadPdf'])->name('pengguna.laporan.pdf');
+    
+    // Route untuk menampilkan form update
+    Route::get('/pengguna/laporan/{id}/update', [LaporanController::class, 'createUpdate'])->name('pengguna.laporan.update_create');
+
+    // Route untuk memproses form update (POST)
+    Route::post('/laporan/{id}/update', [App\Http\Controllers\Pengguna\LaporanController::class, 'storeUpdate'])->name('pengguna.laporan.store_update');
 
 
-
-});
+    });

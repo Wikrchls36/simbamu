@@ -9,15 +9,8 @@ class Laporan extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'jenis_bencana',
-        'status',
-    ];
+    protected $fillable = ['user_id', 'jenis_bencana', 'latitude', 'longitude', 'status'];
 
-    // Relasi: 1 Laporan dimiliki oleh 1 User (Pelapor)
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+    public function user() { return $this->belongsTo(User::class); }
+    public function updates() { return $this->hasMany(LaporanUpdate::class)->orderBy('update_ke', 'desc'); }
 }

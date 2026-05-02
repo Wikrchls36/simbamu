@@ -113,7 +113,7 @@
                     <li class="px-4 py-3 bg-light border-bottom">
                         <span class="d-block text-muted mb-1" style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">Login sebagai:</span>
                         <span class="d-block fw-bold text-dark" style="font-size: 14px; line-height: 1.2;">{{ Auth::user()->name }}</span>
-                        <span class="d-block text-primary fw-medium" style="font-size: 12px;">({{ ucfirst(Auth::user()->role) }})</span>
+                        <span class="d-block text-primary fw-medium" style="font-size: 12px;">(Pengguna)</span>
                     </li>
                     <li>
                         <a class="dropdown-item py-2 px-4 d-flex align-items-center mt-2" href="/profile">

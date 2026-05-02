@@ -80,10 +80,10 @@
     </div>
     
     <ul class="nav">
-    <li class="nav-item"><a href="/dashboard" class="nav-link"><i class="fas fa-th-large me-3"></i> Beranda</a></li>
-    <li class="nav-item"><a href="/pengguna/peta" class="nav-link"><i class="fas fa-map-marked-alt me-3"></i> Peta Potensi Bencana</a></li>
-    <li class="nav-item"><a href="/pengguna/peringatan" class="nav-link"><i class="fas fa-exclamation-triangle me-3"></i> Peringatan Bencana</a></li>
-    <li class="nav-item"><a href="/pengguna/laporan/buat" class="nav-link"><i class="fas fa-file-alt me-3"></i> Laporan Bencana</a></li>
+        <li class="nav-item"><a href="/dashboard" class="nav-link"><i class="fas fa-th-large me-3"></i> Beranda</a></li>
+        <li class="nav-item"><a href="/pengguna/peta" class="nav-link"><i class="fas fa-map-marked-alt me-3"></i> Peta Potensi Bencana</a></li>
+        <li class="nav-item"><a href="/pengguna/peringatan" class="nav-link"><i class="fas fa-exclamation-triangle me-3"></i> Peringatan Bencana</a></li>
+        <li class="nav-item"><a href="/pengguna/laporan" class="nav-link"><i class="fas fa-file-alt me-3"></i> Laporan Bencana</a></li>
     </ul>
     
     </div>
@@ -146,7 +146,7 @@
                             <h5 class="fw-bold text-dark mb-1">Ada Kejadian Bencana?</h5>
                             <p class="text-muted mb-0">Segera buat laporan baru untuk ditindaklanjuti oleh MDMC Wilayah.</p>
                         </div>
-                        <a href="{{ route('pengguna.laporan.create') }}" class="btn btn-danger px-4 py-2 rounded-pill shadow-sm fw-bold">
+                        <a href="/pengguna/laporan/create" class="btn btn-danger px-4 py-2 rounded-pill shadow-sm fw-bold">
                             <i class="fas fa-plus me-2"></i> Buat Laporan
                         </a>
                     </div>
