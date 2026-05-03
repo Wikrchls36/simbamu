@@ -167,7 +167,7 @@
                     <div class="card border-0 shadow-sm rounded-4" style="background-color: #0056ff; overflow: hidden;">
                         <div class="card-body p-4 position-relative">
                             <h5 class="fw-bold text-white mb-4 position-relative" style="z-index: 2;">Peta Penyebaran Bencana</h5>
-                            <a href="{{ route('laporan.peta') }}" class="btn btn-warning fw-bold px-4 rounded-pill shadow-sm position-relative" style="z-index: 2;">
+                            <a href="{{ route('admin.laporan.peta') }}" class="btn btn-warning fw-bold px-4 rounded-pill shadow-sm position-relative" style="z-index: 2;">
                              Lihat Peta
                             </a>
                             <i class="fas fa-map-marked-alt position-absolute" style="font-size: 6rem; color: rgba(255,255,255,0.2); bottom: -10px; right: 10px; z-index: 1;"></i>
@@ -221,12 +221,12 @@
                                     </td>
                                     <td>{{ $laporan->jenis_bencana }}</td>
                                     <td class="text-center">
-                                        <a href="#" class="btn btn-primary btn-sm rounded-3 shadow-sm me-1" title="Lihat Laporan">
+                                        <a href="{{ route('admin.laporan.show', $laporan->id) }}" class="btn btn-primary btn-sm rounded-3 shadow-sm me-1" title="Lihat Laporan">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                         
                                         @if($laporan->status == 'Aktif')
-                                            <form action="{{ route('laporan.selesai', $laporan->id) }}" method="POST" class="d-inline">
+                                            <form action="{{ route('admin.laporan.selesai', $laporan->id) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('PATCH')
                                                 <button type="submit" class="btn btn-success btn-sm rounded-3 shadow-sm" title="Konfirmasi Selesai" onclick="return confirm('Apakah Anda yakin laporan dari daerah ini telah selesai/kondusif?')">

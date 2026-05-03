@@ -61,7 +61,7 @@
     </div>
 
     <div class="map-container">
-        <a href="{{ route('laporan.index') }}" class="btn-back-floating" title="Kembali ke Log Laporan">
+        <a href="{{ route('admin.laporan.index') }}" class="btn-back-floating" title="Kembali ke Log Laporan">
             <i class="fas fa-arrow-left"></i>
         </a>
         <div id="map"></div>
@@ -158,7 +158,7 @@
                                 <!-- TOMBOL AKSI (Desain Baru) -->
                                     <div class="d-flex gap-2 border-top pt-3 mt-2">
                                         <!-- Tombol Detail Laporan (Warna teks dipaksa putih) -->
-                                        <a href="{{ route('pengguna.laporan.pdf', $latest->id) }}" class="btn btn-primary btn-sm fw-bold w-100 d-flex align-items-center justify-content-center shadow-sm text-white" style="border-radius: 8px; padding: 8px; color: #ffffff !important;">
+                                        <a href="{{ route('admin.laporan.show', $latest->id) }}" class="btn btn-primary btn-sm fw-bold w-100 d-flex align-items-center justify-content-center shadow-sm text-white" style="border-radius: 8px; padding: 8px; color: #ffffff !important;">
                                             <i class="fas fa-file-pdf me-2" style="color: #ffffff !important;"></i> Detail Laporan
                                         </a>
                                         

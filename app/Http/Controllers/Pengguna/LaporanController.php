@@ -123,7 +123,13 @@ class LaporanController extends Controller
     // Mendownload PDF
     public function downloadPdf($update_id)
     {
-        $sitrep = LaporanUpdate::with('laporan')->findOrFail($update_id);
+        $sitrep = \App\Models\LaporanUpdate::with('laporan')->findOrFail($update_id);
+        
+        // KUNCI GANDA: Jika user yang login BUKAN pemilik laporan, tolak aksesnya!
+        if ($sitrep->laporan->user_id != \Auth::id()) {
+            abort(403, 'Akses Ditolak: Anda tidak memiliki izin untuk mengunduh laporan daerah lain.');
+        }
+        
         return view('pengguna.laporan.pdf', compact('sitrep'));
     }
 
@@ -203,4 +209,6 @@ class LaporanController extends Controller
         return redirect()->route('pengguna.laporan.index')
                          ->with('success', 'SitRep lanjutan berhasil ditambahkan!');
     }
+
+    
 }

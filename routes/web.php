@@ -55,11 +55,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/peringatan', [PeringatanController::class, 'store'])->name('peringatan.store');
 
     // Laporan Bencana (Admin)
-    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
-    Route::patch('/laporan/{id}/selesai', [LaporanController::class, 'tandaiSelesai'])->name('laporan.selesai');
-    Route::get('/laporan/peta', [LaporanController::class, 'peta'])->name('laporan.peta');
+    Route::get('/laporan', [App\Http\Controllers\Admin\LaporanController::class, 'index'])->name('admin.laporan.index'); 
+    Route::get('/laporan/peta', [App\Http\Controllers\Admin\LaporanController::class, 'peta'])->name('admin.laporan.peta');
+    Route::get('/laporan/{id}/detail', [App\Http\Controllers\Admin\LaporanController::class, 'show'])->name('admin.laporan.show');
+    Route::get('/laporan/{id}/pdf', [App\Http\Controllers\Admin\LaporanController::class, 'downloadPdf'])->name('admin.laporan.pdf');
+    Route::patch('/laporan/{id}/selesai', [App\Http\Controllers\Admin\LaporanController::class, 'tandaiSelesai'])->name('admin.laporan.selesai');
 
-}); // <--- PENUTUP GRUP ADMIN (Baris ini yang tadi hilang)
+}); // 
 
 
 // --- GRUP RUTE PENGGUNA / MDMC DAERAH ---

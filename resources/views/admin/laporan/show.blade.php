@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Detail Laporan - MDMC Daerah</title>
+    <title>Detail Laporan - Pimpinan Wilayah</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -44,7 +44,8 @@
 <div class="container py-4 py-md-5" style="max-width: 1000px;">
     
     <div class="d-flex align-items-center mb-4 gap-4">
-        <a href="{{ route('pengguna.laporan.index') }}" class="btn btn-light bg-white border shadow-sm rounded-pill px-4 py-2 fw-bold text-secondary btn-back flex-shrink-0">
+        <!-- PERBAIKAN 1: Tombol Kembali -> admin.laporan.index -->
+        <a href="{{ route('admin.laporan.index') }}" class="btn btn-light bg-white border shadow-sm rounded-pill px-4 py-2 fw-bold text-secondary btn-back flex-shrink-0">
             <i class="fas fa-arrow-left me-2"></i> Kembali
         </a>
         <div>
@@ -55,7 +56,8 @@
 
     <div class="d-flex gap-2 overflow-auto pb-3 mb-2" style="scrollbar-width: thin;">
         @foreach($laporan->updates as $index => $update)
-            <a href="{{ route('pengguna.laporan.show', ['id' => $laporan->id, 'sitrep' => $update->id]) }}" 
+            <!-- PERBAIKAN 2: Tab SitRep -> admin.laporan.show -->
+            <a href="{{ route('admin.laporan.show', ['id' => $laporan->id, 'sitrep' => $update->id]) }}" 
                class="sitrep-tab {{ ($currentSitrep && $currentSitrep->id == $update->id) ? 'active' : '' }}">
                <i class="fas {{ $index == 0 ? 'fa-flag' : 'fa-sync-alt' }} me-2"></i> 
                SitRep {{ $index + 1 }}
@@ -70,11 +72,10 @@
             <div class="text-muted small fw-medium">
                 <i class="fas fa-clock me-1"></i> Diperbarui: {{ \Carbon\Carbon::parse($currentSitrep->updated_at)->timezone('Asia/Jakarta')->translatedFormat('d F Y, H:i') }} WIB
             </div>
-            @if(Auth::id() == $laporan->user_id)
-            <a href="{{ route('pengguna.laporan.pdf', $currentSitrep->id) }}" class="btn btn-primary btn-sm rounded-pill px-4 fw-bold shadow-sm" target="_blank">
+            <!-- PERBAIKAN 3: Tombol PDF -> admin.laporan.pdf -->
+            <a href="{{ route('admin.laporan.pdf', $currentSitrep->id) }}" class="btn btn-primary btn-sm rounded-pill px-4 fw-bold shadow-sm" target="_blank">
                 <i class="fas fa-file-pdf me-2"></i> Download PDF
             </a>
-            @endif
         </div>
 
         <div class="p-4 p-md-5 pt-4">
