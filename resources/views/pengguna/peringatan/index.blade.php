@@ -142,7 +142,7 @@
                             <tbody class="bg-white" id="logTableBody">
                                 @forelse($dataPeringatan as $log)
                                 <tr>
-                                    <td class="ps-4 text-muted small">{{ $log->created_at->format('d F Y') }}</td>
+                                    <td class="ps-4 text-muted small">{{ $log->created_at->locale('id')->translatedFormat('d F Y') }}</td>
                                     <td class="fw-medium text-dark">MDMC Wilayah Kalbar</td>
                                     <td>
                                         @if($log->tingkat_potensi == 'Monitoring')

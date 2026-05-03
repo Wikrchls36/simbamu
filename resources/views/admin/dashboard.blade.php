@@ -159,7 +159,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <h5 class="fw-bold mb-0">LAPORAN BENCANA</h5>
-                                <h1 class="display-4 fw-bold">{{ $jumlahLaporan }}</h1>
+                                <h1 class="display-4 fw-bold text-white">{{ $jumlahLaporan ?? 0 }}</h1>
                             </div>
                             <i class="fas fa-clipboard-list fa-4x opacity-50"></i>
                         </div>

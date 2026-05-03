@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Laporan; // Pastikan model Laporan terpanggil
 
 class DashboardController extends Controller
 {
@@ -13,24 +14,28 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
-        // Jika yang login adalah MDMC Daerah
+        // 1. Jika yang login adalah MDMC Daerah
         if ($user->role === 'daerah') {
-            // Arahkan ke file blade khusus daerah
-            return view('pengguna.dashboard', compact('user')); 
+            
+            // PERBAIKAN: Hitung laporan milik daerah ini saja
+            $jumlahLaporan = Laporan::where('user_id', $user->id)->count();
+            
+            // Kirim variabel jumlahLaporan ke file blade daerah
+            return view('pengguna.dashboard', compact('user', 'jumlahLaporan')); 
         }
 
-        // Jika yang login adalah MDMC Wilayah (Admin)
-       // Jika yang login adalah MDMC Wilayah (Admin)
+        // 2. Jika yang login adalah MDMC Wilayah (Admin)
         if ($user->role === 'admin') {
             
-            // PERBAIKAN: Hanya hitung user yang rolenya 'daerah'
+            // Hanya hitung user yang rolenya 'daerah'
             $jumlahPengguna = User::where('role', 'daerah')->count();
             
-            $jumlahLaporan = 0; 
+            // Hitung SEMUA laporan dari seluruh daerah di database
+            $jumlahLaporan = Laporan::count(); 
             
             return view('admin.dashboard', compact('user', 'jumlahPengguna', 'jumlahLaporan')); 
-        
         }
+        
         // Default jika role tidak dikenali
         return abort(403, 'Anda tidak memiliki akses.');
     }

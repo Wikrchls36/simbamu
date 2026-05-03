@@ -242,7 +242,7 @@
                         };
                     },
 
-                    // --- B. PENGATURAN POPUP & HOVER KURSOR ---
+                    
                     // --- B. PENGATURAN POPUP & HOVER KURSOR ---
                     onEachFeature: function(feature, layer) {
                         let item = getDbData(feature);

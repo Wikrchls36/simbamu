@@ -79,10 +79,9 @@
         }
 
         .btn-warning:hover {
-            background-color: #e5b800 !important; /* Kuning sedikit lebih gelap & pekat */
+            background-color: #e5b800 !important;
             border-color: #d4a700 !important;
             color: #000 !important;
-            /* Bayangan hitam tipis lurus ke bawah (tanpa glow menyebar) */
             box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2) !important;
         }
     </style>
@@ -206,19 +205,27 @@
                                 @forelse($laporans as $index => $laporan)
                                 <tr>
                                     <td class="ps-4">{{ $index + 1 }}</td>
-                                    <td class="text-muted small">{{ $laporan->created_at->timezone('Asia/Jakarta')->format('d F Y') }}</td>
+                                    
+                                    <!-- PERBAIKAN: Tanggal dengan locale ID -->
+                                    <td class="text-muted small">{{ $laporan->created_at->timezone('Asia/Jakarta')->locale('id')->translatedFormat('d F Y') }}</td>
+                                    
+                                    <!-- PERBAIKAN: Update Waktu dengan locale ID -->
                                     <td>
-                                        <span class="d-block text-dark small">{{ $laporan->updated_at->timezone('Asia/Jakarta')->format('d F Y') }},</span>
-                                        <span class="d-block text-dark fw-bold small">{{ $laporan->updated_at->timezone('Asia/Jakarta')->format('H.i') }} WIB</span>
+                                        <span class="d-block text-dark small">{{ $laporan->updated_at->timezone('Asia/Jakarta')->locale('id')->translatedFormat('d F Y') }},</span>
+                                        <span class="d-block text-dark fw-bold small">{{ $laporan->updated_at->timezone('Asia/Jakarta')->translatedFormat('H.i') }} WIB</span>
                                     </td>
+                                    
                                     <td class="fw-medium text-dark">{{ $laporan->user->name ?? 'User Tidak Diketahui' }}</td>
+                                    
+                                    <!-- PERBAIKAN: Warna Status (Hijau jika Selesai) -->
                                     <td>
                                         @if($laporan->status == 'Aktif')
                                             <span class="badge bg-primary px-3 py-2 rounded-pill">Aktif</span>
                                         @else
-                                            <span class="badge px-3 py-2 rounded-pill text-white" style="background-color: #a5a5a5;">Selesai</span>
+                                            <span class="badge bg-success px-3 py-2 shadow-sm rounded-pill text-white">Selesai</span>
                                         @endif
                                     </td>
+                                    
                                     <td>{{ $laporan->jenis_bencana }}</td>
                                     <td class="text-center">
                                         <a href="{{ route('admin.laporan.show', $laporan->id) }}" class="btn btn-primary btn-sm rounded-3 shadow-sm me-1" title="Lihat Laporan">

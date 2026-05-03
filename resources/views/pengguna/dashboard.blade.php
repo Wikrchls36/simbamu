@@ -107,7 +107,7 @@
                         <span class="d-block text-primary fw-medium" style="font-size: 12px;">( Pengguna)</span>
                     </li>
                     <li>
-                        <a class="dropdown-item py-2 px-4 d-flex align-items-center mt-2" href="/pengguna/profile">
+                        <a class="dropdown-item py-2 px-4 d-flex align-items-center mt-2" href="/profile">
                             <i class="fas fa-user-edit text-muted me-3" style="width: 20px;"></i> <span>Edit Profile</span>
                         </a>
                     </li>
@@ -132,7 +132,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <h5 class="fw-bold mb-0">LAPORAN BENCANA</h5>
-                                <h1 class="display-4 fw-bold">{{ $jumlahLaporan ?? 0 }}</h1>
+                                <h1 class="display-4 fw-bold text-white">{{ $jumlahLaporan ?? 0 }}</h1>
                                 <small class="opacity-75">Data Terkirim ke Wilayah</small>
                             </div>
                             <i class="fas fa-clipboard-list fa-4x opacity-50"></i>

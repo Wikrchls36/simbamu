@@ -65,7 +65,7 @@ Route::middleware('auth')->group(function () {
 
 
 // --- GRUP RUTE PENGGUNA / MDMC DAERAH ---
-Route::prefix('pengguna')->middleware('auth')->group(function () {
+    Route::prefix('pengguna')->middleware('auth')->group(function () {
     
     // Dashboard Pengguna
     Route::get('/dashboard', [PenggunaDashboard::class, 'index'])->name('pengguna.dashboard');
@@ -103,5 +103,8 @@ Route::prefix('pengguna')->middleware('auth')->group(function () {
     // Route untuk memproses form update (POST)
     Route::post('/laporan/{id}/update', [App\Http\Controllers\Pengguna\LaporanController::class, 'storeUpdate'])->name('pengguna.laporan.store_update');
 
+    // Rute Edit Profil Pengguna
+    Route::get('/profile', [App\Http\Controllers\Pengguna\ProfileController::class, 'index'])->name('pengguna.profile.index');
+    Route::post('/profile', [App\Http\Controllers\Pengguna\ProfileController::class, 'update'])->name('pengguna.profile.update');
 
     });

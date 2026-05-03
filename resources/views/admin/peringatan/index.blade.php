@@ -252,7 +252,7 @@
                             <tbody class="bg-white" id="logTableBody">
                                 @forelse($peringatans as $log)
                                 <tr>
-                                    <td class="ps-4 text-muted small">{{ $log->created_at->format('d F Y') }}</td>
+                                    <td class="ps-4 text-muted small">{{ $log->created_at->locale('id')->translatedFormat('d F Y') }}</td>
                                     <td class="fw-medium text-dark">{{ $log->user->asal_daerah ?? $log->user->name }}</td>
                                     <td>
                                         @if($log->tingkat_potensi == 'Monitoring')

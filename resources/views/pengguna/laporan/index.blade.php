@@ -109,7 +109,6 @@
             <li class="nav-item"><a href="/dashboard" class="nav-link"><i class="fas fa-th-large me-3"></i> Beranda</a></li>
             <li class="nav-item"><a href="/pengguna/peta" class="nav-link"><i class="fas fa-map-marked-alt me-3"></i> Peta Potensi Bencana</a></li>
             <li class="nav-item"><a href="/pengguna/peringatan" class="nav-link"><i class="fas fa-exclamation-triangle me-3"></i> Peringatan Bencana</a></li>
-            <!-- Dibuat sama persis dengan yang di Beranda, tanpa penanda class active -->
             <li class="nav-item"><a href="/pengguna/laporan" class="nav-link"><i class="fas fa-file-alt me-3"></i> Laporan Bencana</a></li>
         </ul>
     </nav>
@@ -132,7 +131,7 @@
                         <span class="d-block text-primary fw-medium" style="font-size: 12px;">(Pengguna)</span>
                     </li>
                     <li>
-                        <a class="dropdown-item py-2 px-4 d-flex align-items-center mt-2" href="/pengguna/profile">
+                        <a class="dropdown-item py-2 px-4 d-flex align-items-center mt-2" href="/profile">
                             <i class="fas fa-user-edit text-muted me-3" style="width: 20px;"></i> <span>Edit Profile</span>
                         </a>
                     </li>
@@ -208,20 +207,23 @@
                                 <tr>
                                     <td class="fw-bold text-muted">{{ $loop->iteration }}</td>
                                     
-                                    <td>{{ \Carbon\Carbon::parse($lap->created_at)->timezone('Asia/Jakarta')->translatedFormat('d F Y') }}</td>
+                                    <!-- PERBAIKAN: Tanggal dengan locale ID -->
+                                    <td>{{ \Carbon\Carbon::parse($lap->created_at)->timezone('Asia/Jakarta')->locale('id')->translatedFormat('d F Y') }}</td>
                                     
+                                    <!-- PERBAIKAN: Update Waktu dengan locale ID -->
                                     <td>
-                                        {{ \Carbon\Carbon::parse($lap->updated_at)->locale('id')->translatedFormat('d F Y,') }} <br>
+                                        {{ \Carbon\Carbon::parse($lap->updated_at)->timezone('Asia/Jakarta')->locale('id')->translatedFormat('d F Y,') }} <br>
                                         <strong class="text-dark">{{ \Carbon\Carbon::parse($lap->updated_at)->timezone('Asia/Jakarta')->translatedFormat('H.i') }} WIB</strong>
                                     </td>
                                     
                                     <td class="text-muted">MDMC Wilayah Kalimantan Barat</td>
                                     
+                                    <!-- PERBAIKAN: Status Selesai menjadi Hijau -->
                                     <td>
                                         @if($lap->status == 'Aktif')
                                             <span class="badge bg-primary px-3 py-2 shadow-sm rounded-pill">Aktif</span>
                                         @else
-                                            <span class="badge bg-success px-3 py-2 shadow-sm rounded-pill">Selesai</span>
+                                            <span class="badge bg-success px-3 py-2 shadow-sm rounded-pill text-white">Selesai</span>
                                         @endif
                                     </td>
                                     
