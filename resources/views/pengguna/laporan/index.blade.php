@@ -2,7 +2,9 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard Laporan - MDMC Daerah</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Bencana - SIMBAMU</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -118,6 +120,7 @@
             <button type="button" id="sidebarCollapse" class="btn btn-primary d-lg-none">
                 <i class="fas fa-bars"></i>
             </button>
+            <h4 class="fw-bold m-0 d-none d-md-block text-dark">Laporan Bencana</h4>
             <div class="ms-auto dropdown">
                 <a href="#" class="d-flex align-items-center text-decoration-none text-dark profile-toggle-btn" data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="{{ Auth::user()->profile_photo ? asset('storage/' . Auth::user()->profile_photo) : asset('images/logo-mdmc.png') }}" class="profile-img me-2 shadow-sm" style="object-fit: cover; width: 40px; height: 40px; border-radius: 50%;">
