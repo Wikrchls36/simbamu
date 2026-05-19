@@ -67,7 +67,7 @@ class PeringatanController extends Controller
                     'countryCode' => '62',
                 ),
                 CURLOPT_HTTPHEADER => array(
-                    'Authorization: y4FU3UJn1JZQdvhzLvGe' // Token Fonnte kamu
+                    'Authorization: hS73fPaAWBpsJatYgAED' // Token Fonnte kamu
                 ),
                 CURLOPT_SSL_VERIFYPEER => false, // Mengabaikan SSL di Localhost agar tembus
             ));

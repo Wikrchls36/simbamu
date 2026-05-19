@@ -13,4 +13,6 @@ class Laporan extends Model
 
     public function user() { return $this->belongsTo(User::class); }
     public function updates() { return $this->hasMany(LaporanUpdate::class)->orderBy('update_ke', 'desc'); }
+
+    
 }
