@@ -13,9 +13,7 @@ return new class extends Migration
             
             // Info Wilayah
             $table->string('kabupaten_kota'); 
-            $table->string('lat_center'); // Latitude titik tengah daerah
-            $table->string('long_center'); // Longitude titik tengah daerah
-            $table->longText('geojson')->nullable(); // Koordinat Polygon Batas Daerah
+           
 
             // Analisis Potensi Banjir
             $table->enum('potensi_banjir', ['Rendah', 'Sedang', 'Tinggi'])->default('Rendah');
