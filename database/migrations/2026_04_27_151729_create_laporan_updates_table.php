@@ -71,7 +71,7 @@ return new class extends Migration
             $table->string('penutup_nama_tim')->nullable();
             
             // Lampiran Foto/PDF
-            $table->string('foto_dokumentasi')->nullable();
+            $table->longText('foto_dokumentasi')->nullable();
 
             $table->timestamps();
         });

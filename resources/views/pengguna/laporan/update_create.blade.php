@@ -323,7 +323,7 @@
                         <div class="col-md-12">
                             <h6 class="fw-bold text-dark mb-2">LAMPIRAN BARU</h6>
                             <label class="form-label text-muted">Upload dokumentasi baru (Opsional)</label>
-                            <input type="file" name="foto_dokumentasi" class="form-control shadow-sm" accept="image/*,.pdf">
+                            <input type="file" name="foto_dokumentasi[]" multiple class="form-control shadow-sm" accept="image/*">
                         </div>
                     </div>
 

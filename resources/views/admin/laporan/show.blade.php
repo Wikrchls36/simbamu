@@ -44,7 +44,6 @@
 <div class="container py-4 py-md-5" style="max-width: 1000px;">
     
     <div class="d-flex align-items-center mb-4 gap-4">
-        <!-- PERBAIKAN 1: Tombol Kembali -> admin.laporan.index -->
         <a href="{{ route('admin.laporan.index') }}" class="btn btn-light bg-white border shadow-sm rounded-pill px-4 py-2 fw-bold text-secondary btn-back flex-shrink-0">
             <i class="fas fa-arrow-left me-2"></i> Kembali
         </a>
@@ -56,7 +55,6 @@
 
     <div class="d-flex gap-2 overflow-auto pb-3 mb-2" style="scrollbar-width: thin;">
         @foreach($laporan->updates as $index => $update)
-            <!-- PERBAIKAN 2: Tab SitRep -> admin.laporan.show -->
             <a href="{{ route('admin.laporan.show', ['id' => $laporan->id, 'sitrep' => $update->id]) }}" 
                class="sitrep-tab {{ ($currentSitrep && $currentSitrep->id == $update->id) ? 'active' : '' }}">
                <i class="fas {{ $index == 0 ? 'fa-flag' : 'fa-sync-alt' }} me-2"></i> 
@@ -72,7 +70,6 @@
             <div class="text-muted small fw-medium">
                 <i class="fas fa-clock me-1"></i> Diperbarui: {{ \Carbon\Carbon::parse($currentSitrep->updated_at)->timezone('Asia/Jakarta')->translatedFormat('d F Y, H:i') }} WIB
             </div>
-            <!-- PERBAIKAN 3: Tombol PDF -> admin.laporan.pdf -->
             <a href="{{ route('admin.laporan.pdf', $currentSitrep->id) }}" class="btn btn-primary btn-sm rounded-pill px-4 fw-bold shadow-sm" target="_blank">
                 <i class="fas fa-file-pdf me-2"></i> Download PDF
             </a>
@@ -80,7 +77,6 @@
 
         <div class="p-4 p-md-5 pt-4">
             
-            <!-- KOP SURAT -->
             <div class="d-flex flex-column flex-md-row align-items-center border-bottom pb-4 mb-4 gap-3 text-center text-md-start">
                 <img src="{{ asset('images/logo-mdmc.png') }}" style="height: 80px;" onerror="this.style.display='none'">
                 <div>
@@ -89,7 +85,6 @@
                 </div>
             </div>
 
-            <!-- A. INFORMASI KUNCI -->
             <div class="doc-section-title">A. Informasi Kunci</div>
             
             <div class="row mb-4">
@@ -155,15 +150,12 @@
                 </div>
             </div>
 
-            <!-- B. KRONOLOGI KEJADIAN -->
             <div class="doc-section-title">B. Kronologi Kejadian</div>
             <div class="content-box">{!! nl2br(e($currentSitrep->kronologi ?? '-')) !!}</div>
 
-            <!-- C. SITUASI TERKINI -->
             <div class="doc-section-title">C. Situasi Terkini</div>
             <div class="content-box">{!! nl2br(e($currentSitrep->situasi_terkini ?? '-')) !!}</div>
 
-            <!-- D. RESPON MUHAMMADIYAH -->
             <div class="doc-section-title">D. Respon Muhammadiyah</div>
             <div class="table-responsive">
                 <table class="table table-bordered table-doc">
@@ -192,7 +184,6 @@
                 </table>
             </div>
 
-            <!-- E. PENERIMA MANFAAT -->
             <div class="doc-section-title">E. Penerima Manfaat</div>
             <div class="table-responsive">
                 <table class="table table-bordered table-doc">
@@ -221,7 +212,6 @@
                 </table>
             </div>
 
-            <!-- F. TIM RESPON MDMC -->
             <div class="doc-section-title">F. Tim Respon MDMC</div>
             <div class="table-responsive mb-3">
                 <table class="table table-bordered table-doc">
@@ -258,7 +248,6 @@
                 <div class="col-md-3"><span class="info-label">Asal Instansi</span><br><span class="small">{{ $currentSitrep->asal_instansi ?? '-' }}</span></div>
             </div>
 
-            <!-- G. KEBUTUHAN -->
             <div class="doc-section-title">G. Kebutuhan</div>
             <div class="table-responsive">
                 <table class="table table-bordered table-doc">
@@ -285,11 +274,9 @@
                 </table>
             </div>
 
-            <!-- H. SUMBER INFORMASI -->
             <div class="doc-section-title">H. Sumber Informasi</div>
             <div class="content-box">{{ $currentSitrep->sumber_informasi ?? '-' }}</div>
 
-            <!-- I. CONTACT PERSON -->
             <div class="doc-section-title">I. Contact Person</div>
             <div class="table-responsive">
                 <table class="table table-bordered table-doc">
@@ -316,11 +303,9 @@
                 </table>
             </div>
 
-            <!-- J. REKENING DONASI -->
             <div class="doc-section-title">J. Rekening Penggalangan Dana</div>
             <div class="content-box">{!! nl2br(e($currentSitrep->rekening_donasi ?? '-')) !!}</div>
 
-            <!-- K. PENUTUP -->
             <div class="doc-section-title">K. Penutup</div>
             <div class="content-box border-0 bg-transparent px-0 text-dark">
                 Demikian laporan ini kami buat sebagai sumber informasi dan diharapkan dapat menjadi pertimbangan dalam pengambilan keputusan.
@@ -331,12 +316,30 @@
                 <p class="fw-bold text-dark m-0">Tim MDMC {{ $currentSitrep->penutup_nama_tim ?? 'Daerah' }}</p>
             </div>
             
-            @if($currentSitrep->foto_dokumentasi)
+            @php
+                $lampirans = [];
+                $raw_foto = $currentSitrep->foto_dokumentasi ?? null;
+                
+                // Logika Pintar: Bongkar JSON jika datanya adalah Array Multi-Foto
+                if (is_string($raw_foto) && strpos($raw_foto, '[') === 0) {
+                    $lampirans = json_decode($raw_foto, true);
+                } elseif (is_string($raw_foto) && !empty($raw_foto)) {
+                    $lampirans = [$raw_foto]; // Jika foto lama tunggal
+                } elseif (is_array($raw_foto)) {
+                    $lampirans = $raw_foto;
+                }
+            @endphp
+
+            @if(!empty($lampirans) && count($lampirans) > 0)
             <div class="mt-5 pt-4 border-top">
                 <h6 class="fw-bold text-dark mb-3"><i class="fas fa-paperclip me-2 text-primary"></i>Lampiran File / Dokumentasi</h6>
-                <a href="{{ asset('storage/' . $currentSitrep->foto_dokumentasi) }}" class="btn btn-outline-primary shadow-sm" target="_blank">
-                    <i class="fas fa-external-link-alt me-2"></i> Lihat Lampiran Laporan
-                </a>
+                <div class="d-flex flex-wrap gap-2">
+                    @foreach($lampirans as $idx => $lampiran)
+                        <a href="{{ asset('storage/' . $lampiran) }}" target="_blank" class="btn btn-outline-primary shadow-sm">
+                            <i class="fas fa-external-link-alt me-2"></i> Lihat Lampiran {{ count($lampirans) > 1 ? $idx + 1 : 'Laporan' }}
+                        </a>
+                    @endforeach
+                </div>
             </div>
             @endif
 

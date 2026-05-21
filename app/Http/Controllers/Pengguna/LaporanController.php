@@ -45,9 +45,16 @@ class LaporanController extends Controller
             'status' => 'Aktif',
         ]);
 
+        // LOGIKA BARU: Menangani Multiple Upload Foto SitRep 1
         $fotoPath = null;
         if ($request->hasFile('foto_dokumentasi')) {
-            $fotoPath = $request->file('foto_dokumentasi')->store('sitrep_lampiran', 'public');
+            $path_fotos = [];
+            // Lakukan looping untuk setiap foto yang diunggah
+            foreach ($request->file('foto_dokumentasi') as $foto) {
+                $path_fotos[] = $foto->store('sitrep_lampiran', 'public');
+            }
+            // Ubah array path gambar menjadi format JSON teks
+            $fotoPath = json_encode($path_fotos);
         }
 
         LaporanUpdate::create([
@@ -99,6 +106,8 @@ class LaporanController extends Controller
             'penutup_lokasi' => $request->penutup_lokasi,
             'penutup_tanggal' => date('Y-m-d'),
             'penutup_nama_tim' => $request->penutup_nama_tim,
+            
+            // Simpan foto dalam format JSON string
             'foto_dokumentasi' => $fotoPath,
         ]);
 
@@ -150,8 +159,13 @@ class LaporanController extends Controller
         $latestSitrep = $laporan->updates->last();
         $fotoPath = $latestSitrep ? $latestSitrep->foto_dokumentasi : null;
 
+        // LOGIKA BARU: Menangani Multiple Upload Foto SitRep Lanjutan
         if ($request->hasFile('foto_dokumentasi')) {
-            $fotoPath = $request->file('foto_dokumentasi')->store('dokumentasi_sitrep', 'public');
+            $path_fotos = [];
+            foreach ($request->file('foto_dokumentasi') as $foto) {
+                $path_fotos[] = $foto->store('dokumentasi_sitrep', 'public');
+            }
+            $fotoPath = json_encode($path_fotos);
         }
 
         $laporan->updates()->create([
@@ -201,6 +215,8 @@ class LaporanController extends Controller
             'penutup_lokasi' => $request->penutup_lokasi,
             'penutup_tanggal' => date('Y-m-d'), 
             'penutup_nama_tim' => $request->penutup_nama_tim,
+            
+            // Simpan foto dalam format JSON string
             'foto_dokumentasi' => $fotoPath,
         ]);
 
@@ -209,6 +225,4 @@ class LaporanController extends Controller
         return redirect()->route('pengguna.laporan.index')
                          ->with('success', 'SitRep lanjutan berhasil ditambahkan!');
     }
-
-    
 }

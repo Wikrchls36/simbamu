@@ -28,6 +28,30 @@
         .info-col { display: table-cell; width: 33.33%; padding-right: 5px; vertical-align: top; }
         .info-label { font-size: 10px; color: #666; text-transform: uppercase; font-weight: bold; display: block; margin-bottom: 3px; }
 
+        /* KODE BARU: GRID FOTO ANTI TERPOTONG */
+        .foto-grid {
+            text-align: center;
+            margin-top: 20px;
+            width: 100%;
+            font-size: 0; /* Menghilangkan jarak bawaan inline-block */
+        }
+        .foto-item {
+            display: inline-block;
+            width: 46%; /* Mengambil hampir setengah halaman (2 kolom) */
+            margin: 0 2% 20px 2%; /* Jarak antar foto */
+            vertical-align: top;
+            page-break-inside: avoid; /* Memaksa pindah halaman jika terpotong */
+            break-inside: avoid;
+        }
+        .foto-item img {
+            max-width: 100%;
+            max-height: 280px; /* Disesuaikan agar proporsional di grid */
+            border: 2px solid #333;
+            padding: 5px;
+            box-sizing: border-box;
+            background-color: #fff;
+        }
+
         /* LOADER */
         #loading { position: fixed; top:0; left:0; width:100%; height:100%; background:white; display:flex; flex-direction:column; justify-content:center; align-items:center; z-index:99; }
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #0047ba; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; }
@@ -41,7 +65,6 @@
         <p style="font-family: Arial; color: #0047ba; margin-top: 10px; font-weight: bold;">Menyusun Ulang Halaman PDF...</p>
     </div>
 
-    <!-- TEMPLATE KOP SURAT (Otomatis dilooping di tiap halaman) -->
     @php
     $kop_surat = '
     <div class="kop-surat">
@@ -55,9 +78,6 @@
 
     <div id="render-area">
         
-        <!-- ========================================== -->
-        <!-- HALAMAN 1 (A, B, C)                        -->
-        <!-- ========================================== -->
         <div class="halaman">
             {!! $kop_surat !!}
 
@@ -136,9 +156,6 @@
 
         <div class="html2pdf__page-break"></div>
 
-        <!-- ========================================== -->
-        <!-- HALAMAN 2 (D, E, F)                        -->
-        <!-- ========================================== -->
         <div class="halaman">
             {!! $kop_surat !!}
 
@@ -149,7 +166,7 @@
                     @php 
                         $resp_kluster = is_string($sitrep->resp_kluster ?? null) ? json_decode($sitrep->resp_kluster, true) : ($sitrep->resp_kluster ?? []);
                         $resp_lokasi = is_string($sitrep->resp_lokasi ?? null) ? json_decode($sitrep->resp_lokasi, true) : ($sitrep->resp_lokasi ?? []);
-                        $resp_keterangan = is_string($sitrep->resp_keterangan ?? null) ? json_decode($sitrep->resp_keterangan, true) : ($sitrep->resp_keterangan ?? []);
+                        $resp_keterangan = is_string($sitrep->resp_keterangan ?? null) ? json_decode($sitrep->resp_keterangan, true) : ($currentSitrep->resp_keterangan ?? []);
                     @endphp
 
                     @if(empty($resp_kluster) || (count($resp_kluster) == 1 && empty($resp_kluster[0])))
@@ -232,9 +249,6 @@
 
         <div class="html2pdf__page-break"></div>
 
-        <!-- ========================================== -->
-        <!-- HALAMAN 3 (G, H, I, J, K)                  -->
-        <!-- ========================================== -->
         <div class="halaman">
             {!! $kop_surat !!}
 
@@ -300,6 +314,51 @@
                 <p class="fw-bold" style="margin-top: 5px;">Tim MDMC {{ $sitrep->penutup_nama_tim ?? 'Daerah' }}</p>
             </div>
         </div>
+
+        @if(!empty($sitrep->foto_dokumentasi))
+        <div class="html2pdf__page-break"></div>
+        <div class="halaman">
+            {!! $kop_surat !!}
+            <div class="section-title" style="margin-top: 0;">L. LAMPIRAN DOKUMENTASI</div>
+            
+            <div class="foto-grid">
+                @php
+                    $daftar_foto = [];
+                    $raw_foto = $sitrep->foto_dokumentasi;
+
+                    if (is_string($raw_foto) && strpos($raw_foto, '[') === 0) {
+                        $daftar_foto = json_decode($raw_foto, true);
+                    } elseif (is_string($raw_foto) && !empty($raw_foto)) {
+                        $daftar_foto = [$raw_foto];
+                    } elseif (is_array($raw_foto)) {
+                        $daftar_foto = $raw_foto;
+                    }
+                @endphp
+
+                @if(!empty($daftar_foto) && is_array($daftar_foto))
+                    @foreach($daftar_foto as $foto_path)
+                        @php
+                            $path = storage_path('app/public/' . $foto_path);
+                            $base64 = null;
+                            if(file_exists($path)) {
+                                $type = pathinfo($path, PATHINFO_EXTENSION);
+                                $data = file_get_contents($path);
+                                $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+                            }
+                        @endphp
+
+                        @if($base64)
+                            <div class="foto-item">
+                                <img src="{{ $base64 }}">
+                            </div>
+                        @endif
+                    @endforeach
+                @else
+                    <p style="color: #555; margin-top: 50px; text-align: center; width: 100%; font-size: 14px;"><i>File foto tidak ditemukan atau format tidak valid di dalam server.</i></p>
+                @endif
+            </div>
+        </div>
+        @endif
 
     </div>
 
