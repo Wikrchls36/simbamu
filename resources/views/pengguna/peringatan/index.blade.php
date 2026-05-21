@@ -12,7 +12,6 @@
         :root { --mdmc-blue: #0047ba; --mdmc-light-blue: #1aa4f6; }
         body { font-family: 'Poppins', sans-serif; background-color: #f4f7fa; overflow-x: hidden; }
         
-        /* SIDEBAR FLEXBOX */
         #sidebar { width: 280px; min-height: 100vh; background: var(--mdmc-light-blue); transition: all 0.3s; position: fixed; z-index: 1000; display: flex; flex-direction: column; }
         #sidebar.active { margin-left: -280px; }
         .sidebar-header { height: 70px; display: flex; align-items: center; justify-content: center; background: #fff; border-bottom: 1px solid #eee; position: relative; }
@@ -24,17 +23,14 @@
         #sidebarOverlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 999; display: none; }
         #sidebarOverlay.show { display: block; }
 
-        /* MAIN CONTENT & NAVBAR */
         #content { width: calc(100% - 280px); margin-left: 280px; transition: all 0.3s; min-height: 100vh; display: flex; flex-direction: column; }
         #content.active { width: 100%; margin-left: 0; }
         .navbar { height: 70px; }
         .profile-img { width: 40px; height: 40px; border-radius: 50%; border: 1px solid #ddd; padding: 2px; }
 
-        /* CUSTOM CSS TABEL PERINGATAN */
         .table-custom th { color: #333; font-weight: 600; padding: 15px; border-bottom: 2px solid #ddd; }
         .table-custom td { vertical-align: middle; padding: 15px; border-bottom: 1px solid #eee; }
         
-        /* Indikator Status Potensi */
         .dot-indikator { height: 12px; width: 12px; border-radius: 50%; display: inline-block; margin-right: 8px; }
         .dot-monitoring { background-color: #00d26a; }
         .dot-siaga { background-color: #ffc107; }
@@ -116,7 +112,7 @@
                 </div>
             @endif
 
-            {{-- TABEL LOG PERINGATAN (Satu-satunya tabel di halaman Daerah) --}}
+            {{-- TABEL LOG PERINGATAN  --}}
             <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5">
                 <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-2 d-flex justify-content-between align-items-center flex-wrap gap-2">
                     <h6 class="fw-bold text-dark m-0">Log Instruksi & Peringatan</h6>
@@ -179,14 +175,14 @@
 
         <footer class="text-center py-4 mt-auto">
             <small class="text-muted">
-                <i class="far fa-copyright"></i> MDMC KALIMANTAN BARAT 2026 - SOLID BERGERAK MONITOR | DIKELOLA OLEH BIDANG DATA DAN INFORMASI
+                <i class="far fa-copyright"></i> MDMC KALIMANTAN BARAT 2026 - SOLID BERGERAK MONITOR | DIKELOLA OLEH BIDANG TANGGAP DARURAT
             </small>
         </footer>
 
     </div>
 </div>
 
-{{-- MODAL DETAIL & KONFIRMASI --}}
+
 @foreach($dataPeringatan as $log)
 <div class="modal fade" id="modalDetailPeringatan{{ $log->id }}" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -223,7 +219,6 @@
                 <div class="d-flex align-items-center">
                     <p class="fw-bold text-dark mb-0 me-2">Status Anda :</p>
                     
-                    {{-- Hapus toleransi 'Sudah Dibaca', samakan dengan Admin --}}
                     @if($log->status_konfirmasi == 'Telah Direspon' || $log->status_konfirmasi == 'Dikonfirmasi')
                         <span class="badge bg-success px-3 py-2 rounded-3 text-white fw-bold">
                             <i class="fas fa-check-circle me-1"></i> Sudah Direspon
@@ -239,7 +234,6 @@
             <div class="modal-footer border-top-0 px-4 pb-4 justify-content-end gap-2">
                 <button type="button" class="btn text-white fw-bold px-4 rounded-3" style="background-color: #a5a5a5;" data-bs-dismiss="modal">Tutup</button>
                 
-                {{-- TOMBOL KONFIRMASI HANYA MUNCUL JIKA BELUM DIRESPON --}}
                 @if($log->status_konfirmasi == 'Belum Direspon')
                 <form action="{{ route('pengguna.peringatan.konfirmasi', $log->id) }}" method="POST" class="m-0">
                     @csrf
@@ -257,7 +251,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // 1. Logika Sidebar Mobile
+    
     const sidebar = document.getElementById('sidebar');
     const sidebarCollapse = document.getElementById('sidebarCollapse');
     const closeSidebar = document.getElementById('closeSidebar');
@@ -267,7 +261,7 @@
     const hideSidebar = () => { sidebar.classList.remove('show'); sidebarOverlay.classList.remove('show'); };
     closeSidebar.addEventListener('click', hideSidebar); sidebarOverlay.addEventListener('click', hideSidebar);
 
-    // 2. Auto-hide Alert Sukses
+    
     document.addEventListener("DOMContentLoaded", function() {
         const alertElement = document.getElementById("success-alert");
         if (alertElement) {
@@ -275,7 +269,7 @@
         }
     });
 
-    // 3. Logika Pencarian Tabel Log (Sama Persis dengan Wilayah)
+    // Pencarian 
     const searchInput = document.getElementById('searchInput');
     const logTableBody = document.getElementById('logTableBody');
 
@@ -285,14 +279,13 @@
             let rows = logTableBody.getElementsByTagName('tr');
 
             for (let i = 0; i < rows.length; i++) {
-                // Abaikan baris kosong ("Belum ada riwayat...")
+                
                 if (rows[i].getElementsByTagName('td')[0].colSpan > 1) {
                     continue; 
                 }
 
                 let rowText = rows[i].textContent.toLowerCase();
                 
-                // Jika teks baris cocok dengan pencarian, tampilkan. Jika tidak, sembunyikan.
                 if (rowText.includes(filterValue)) {
                     rows[i].style.display = '';
                 } else {

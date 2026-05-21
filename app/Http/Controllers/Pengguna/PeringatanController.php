@@ -4,14 +4,14 @@ namespace App\Http\Controllers\Pengguna;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Peringatan; // Pastikan Model Peringatan sudah ada
+use App\Models\Peringatan; 
 use Illuminate\Support\Facades\Auth;
 
 class PeringatanController extends Controller
 {
     public function index()
     {
-        // Mengambil data peringatan khusus untuk user yang sedang login
+        // Mengambil data peringatan 
         $dataPeringatan = Peringatan::where('user_id', Auth::id())
                             ->orderBy('created_at', 'desc')
                             ->get();
@@ -19,15 +19,15 @@ class PeringatanController extends Controller
         return view('pengguna.peringatan.index', compact('dataPeringatan'));
     }
 
-    // Fungsi tambahan jika nanti ingin konfirmasi pesan
+    
     public function konfirmasi($id)
 {
-    // Jalur Tol yang sudah disempurnakan
+   
     \Illuminate\Support\Facades\DB::table('peringatan')
         ->where('id', $id)
         ->update([
             'status_konfirmasi' => 'Telah Direspon',
-            'updated_at' => now() // <--- Tambahkan ini agar waktu update tercatat
+            'updated_at' => now() 
         ]);
 
     return back()->with('success', 'Peringatan telah berhasil dikonfirmasi!');

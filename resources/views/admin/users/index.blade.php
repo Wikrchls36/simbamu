@@ -9,8 +9,7 @@
     <style>
         :root { --mdmc-blue: #0047ba; --mdmc-light-blue: #1aa4f6; }
         body { font-family: 'Poppins', sans-serif; background-color: #f4f7fa; overflow-x: hidden; margin: 0; }
-        
-        /* SIDEBAR (Ukuran 280px) */
+    
         #sidebar {
             width: 280px; min-height: 100vh; background: var(--mdmc-light-blue);
             transition: all 0.3s; position: fixed; z-index: 1000;
@@ -21,12 +20,11 @@
             background: #fff; border-bottom: 1px solid #eee; position: relative;
         }
 
-        /* Navigasi & Jarak Menu */
         .nav {
-            flex-grow: 1; /* Mengisi sisa ruang kosong */
+            flex-grow: 1; 
             display: flex; flex-direction: column;
-            justify-content: space-evenly; /* Menyebar merata atas ke bawah */
-            padding: 20px 0 40px 0; /* Ruang atas dan bawah */
+            justify-content: space-evenly; 
+            padding: 20px 0 40px 0;
         }
 
         .nav-item { padding: 0 15px; }
@@ -38,22 +36,21 @@
 
         .nav-link:hover { color: var(--mdmc-blue) !important; background: white; }
 
-        /* MAIN CONTENT */
         #content { width: calc(100% - 280px); margin-left: 280px; transition: all 0.3s; min-height: 100vh; display: flex; flex-direction: column; }
         
-        /* NAVBAR & PROFILE SPACING */
+     
         .navbar { height: 70px; background: #fff; }
         .profile-img { width: 40px; height: 40px; border-radius: 50%; border: 1px solid #ddd; padding: 2px; object-fit: cover; }
         .profile-toggle-btn::after { display: none !important; }
         .profile-toggle-btn .profile-arrow { transition: transform 0.3s ease; }
         .profile-toggle-btn.show .profile-arrow { transform: rotate(180deg); }
 
-        /* TABEL & CARD */
+    
         .main-card { border: 1px solid #e0e0e0; border-radius: 12px; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
         .btn-tambah { background-color: #0d6efd; color: #fff; font-weight: 600; border-radius: 8px; transition: 0.2s; border: none; }
         .btn-tambah:hover { background-color: #0b5ed7; color: #fff !important; }
         
-        /*TOMBOL AKSI  */
+        
         .btn-edit { 
             background-color: #00e600; 
             color: white; 
@@ -68,9 +65,8 @@
         }
 
         .btn-edit:hover {
-            background-color: #00b300; /* Warna menjadi lebih gelap */
+            background-color: #00b300; 
             color: white;
-            /* Bayangan hitam tipis ke bawah, BUKAN cahaya menyebar */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
         }
 
@@ -88,13 +84,12 @@
         }
 
         .btn-delete:hover {
-            background-color: #d90000; /* Warna menjadi lebih gelap */
-            /* Bayangan hitam tipis ke bawah, BUKAN cahaya menyebar */
+            background-color: #d90000; 
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
         }
        
 
-        /* MOBILE RESPONSIVE */
+      
         #sidebarOverlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 999; display: none; }
         #sidebarOverlay.show { display: block; }
         @media (max-width: 992px) {
@@ -213,7 +208,7 @@
 
         <footer class="text-center py-4 mt-auto">
             <small class="text-muted">
-                <i class="far fa-copyright"></i> MDMC KALIMANTAN BARAT 2026 - SOLID BERGERAK MONITOR | DIKELOLA OLEH BIDANG DATA DAN INFORMASI
+                <i class="far fa-copyright"></i> MDMC KALIMANTAN BARAT 2026 - SOLID BERGERAK MONITOR | DIKELOLA OLEH BIDANG TANGGAP DARURAT
             </small>
         </footer>
     </div>
@@ -222,7 +217,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    // 1. LOGIKA SIDEBAR (KODE LAMA KAMU)
+    
     const sidebar = document.getElementById('sidebar');
     const sidebarCollapse = document.getElementById('sidebarCollapse');
     const closeSidebar = document.getElementById('closeSidebar');
@@ -241,7 +236,7 @@
     closeSidebar.addEventListener('click', hideSidebar);
     sidebarOverlay.addEventListener('click', hideSidebar);
 
-    // 2. LOGIKA SWEETALERT UNTUK KONFIRMASI HAPUS
+
     document.querySelectorAll('.btn-hapus-custom').forEach(button => {
         button.addEventListener('click', function(e) {
             const form = this.closest('.form-delete');
@@ -252,7 +247,7 @@
                 text: "Akun " + namaUser + " akan dihapus dari sistem!",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#0000ff', // Biru sesuai tema tombol Simpan kamu
+                confirmButtonColor: '#0000ff', 
                 cancelButtonColor: '#aaa',
                 confirmButtonText: 'Ya, Hapus!',
                 cancelButtonText: 'Batal',
@@ -262,13 +257,13 @@
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    form.submit(); // Kirim form jika klik OK
+                    form.submit(); 
                 }
             });
         });
     });
 
-    // 3. LOGIKA SWEETALERT UNTUK NOTIFIKASI SUKSES (PENGGANTI ALERT HIJAU)
+   
     @if(session('success'))
         Swal.fire({
             icon: 'success',
@@ -280,8 +275,6 @@
         });
     @endif
 
-    // 4. (OPSIONAL) TETAP JAGA LOGIKA AUTOCLOSE ALERT BOOTSTRAP 
-    // Jika kamu masih pakai alert hijau bawaan di atas tabel
     setTimeout(function() {
         let alertNode = document.getElementById('autoCloseAlert');
         if(alertNode) { 

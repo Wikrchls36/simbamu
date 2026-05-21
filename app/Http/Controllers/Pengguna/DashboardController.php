@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Pengguna;
 
 use App\Http\Controllers\Controller;
-use App\Models\Laporan; // <-- Kita sesuaikan dengan nama model aslimu
-use Illuminate\Support\Facades\Auth; // Wajib untuk mengambil data user yang login
+use App\Models\Laporan; 
+use Illuminate\Support\Facades\Auth; 
 
 class DashboardController extends Controller
 {
@@ -14,7 +14,7 @@ class DashboardController extends Controller
         // Jumlah Laporan
         $jumlahLaporan = Laporan::where('user_id', Auth::id())->count();
 
-        // Kirim datanya ke file blade
+        // Mengirim data jumlah laporan ke halaman dashboard
         return view('pengguna.dashboard', compact('jumlahLaporan'));
     }
 }

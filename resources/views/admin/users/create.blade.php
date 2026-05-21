@@ -90,12 +90,12 @@
 
         <footer class="text-center py-4 mt-5">
             <small class="text-muted">
-                <i class="far fa-copyright"></i> MDMC KALIMANTAN BARAT 2026 - SOLID BERGERAK MONITOR | DIKELOLA OLEH BIDANG DATA DAN INFORMASI
+                <i class="far fa-copyright"></i> MDMC KALIMANTAN BARAT 2026 - SOLID BERGERAK MONITOR | DIKELOLA OLEH BIDANG TANGGAP DARURAT
             </small>
         </footer>
 
 <script>
-    // 1. Logika Otomatis Isi Nama & Koordinat
+    
     document.getElementById('regency_select').addEventListener('change', function() {
         const selectedOption = this.options[this.selectedIndex];
         const regencyName = selectedOption.value;
@@ -106,14 +106,14 @@
 
         if(regencyName) {
             nameInput.value = 'MDMC ' + regencyName;
-            coordsInput.value = coords; // Mengisi titik lat,lng otomatis ke background
+            coordsInput.value = coords; 
         } else {
             nameInput.value = '';
             coordsInput.value = '';
         }
     });
 
-    // 2. Logika Intip Password
+    
     function toggleVisibility(inputId, iconElement) {
         const input = document.getElementById(inputId);
         if (input.type === "password") {

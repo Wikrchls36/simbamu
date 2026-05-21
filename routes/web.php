@@ -26,7 +26,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
-// --- GRUP RUTE ADMIN (WAJIB LOGIN) ---
+// ---  ADMIN  ---
 Route::middleware('auth')->group(function () {
     
     // Dashboard & Profil Admin
@@ -50,7 +50,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/peta/kelola', [PetaController::class, 'kelola'])->name('peta.kelola');
     Route::put('/peta/update/{id}', [PetaController::class, 'update'])->name('peta.update');
 
-    // Peringatan Bencana (Admin Kirim)
+    // Peringatan Bencana (Admin)
     Route::get('/peringatan', [PeringatanController::class, 'index'])->name('peringatan.index');
     Route::post('/peringatan', [PeringatanController::class, 'store'])->name('peringatan.store');
 
@@ -64,7 +64,7 @@ Route::middleware('auth')->group(function () {
 }); // 
 
 
-// --- GRUP RUTE PENGGUNA / MDMC DAERAH ---
+// ---  PENGGUNA  ---
     Route::prefix('pengguna')->middleware('auth')->group(function () {
     
     // Dashboard Pengguna
@@ -85,7 +85,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/laporan/create', [PenggunaLaporan::class, 'create'])->name('pengguna.laporan.create');
     Route::post('/laporan/store', [PenggunaLaporan::class, 'store'])->name('pengguna.laporan.store');
 
-    // Rute Peta (Pindahkan ke /laporan/peta agar seragam)
+    // Rute Peta 
     Route::get('/laporan/peta', [PenggunaLaporan::class, 'peta'])->name('pengguna.laporan.peta');
 
     Route::get('/laporan/{id}/update', [App\Http\Controllers\Pengguna\LaporanController::class, 'createUpdate'])->name('pengguna.laporan.update_create');
@@ -97,10 +97,10 @@ Route::middleware('auth')->group(function () {
     // Rute asli untuk mendownload PDF
     Route::get('/laporan/sitrep/{update_id}/pdf', [App\Http\Controllers\Pengguna\LaporanController::class, 'downloadPdf'])->name('pengguna.laporan.pdf');
     
-    // Route untuk menampilkan form update
+    // Rute untuk menampilkan form update
     Route::get('/pengguna/laporan/{id}/update', [LaporanController::class, 'createUpdate'])->name('pengguna.laporan.update_create');
 
-    // Route untuk memproses form update (POST)
+    // Rute untuk memproses form update (POST)
     Route::post('/laporan/{id}/update', [App\Http\Controllers\Pengguna\LaporanController::class, 'storeUpdate'])->name('pengguna.laporan.store_update');
 
     // Rute Edit Profil Pengguna

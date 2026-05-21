@@ -21,7 +21,7 @@
         }
         .badge-potensi { min-width: 85px; }
         
-        /* Modifikasi Modal agar lebih rapi */
+        
         .modal-content { border-radius: 15px; border: none; }
         .modal-header { border-bottom: 2px solid #f1f1f1; border-top-left-radius: 15px; border-top-right-radius: 15px; }
         .modal-footer { border-top: 2px solid #f1f1f1; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px; }
@@ -210,34 +210,33 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // Cek apakah ada pesan sukses dari Controller
+        
         @if(session('success'))
             Swal.fire({
                 icon: 'success',
                 title: 'Berhasil!',
                 text: "{{ session('success') }}",
                 showConfirmButton: false, 
-                timer: 2500, /* Otomatis hilang dalam 2.5 detik */
+                timer: 2500, 
                 timerProgressBar: true
             });
         @endif
     </script>
     <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // Mencari elemen kotak hijau berdasarkan class Bootstrap 'alert-success'
+     
         const kotakHijau = document.querySelector('.alert-success');
         
         if (kotakHijau) {
-            // Set waktu tunggu selama 2.5 detik (2500 ms) agar bareng dengan SweetAlert
+            
             setTimeout(function() {
-                // Efek memudar
+                
                 kotakHijau.style.transition = "opacity 0.5s ease";
                 kotakHijau.style.opacity = "0";
                 
-                // Menghapus elemen dari halaman setelah memudar
                 setTimeout(function() {
                     kotakHijau.remove();
-                }, 500); // Tunggu 0.5 detik untuk animasi memudarnya selesai
+                }, 500); 
                 
             }, 2500); 
         }

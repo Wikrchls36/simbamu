@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('peta_bencanas', function (Blueprint $table) {
+        Schema::table('peta_bencana', function (Blueprint $table) {
             // Tambahan Data Banjir
             $table->string('tahun_banjir')->nullable();
             $table->integer('jiwa_terdampak_banjir')->default(0);

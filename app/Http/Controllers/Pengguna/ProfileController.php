@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Pengguna; // <-- Perhatikan, sekarang ada di folder Pengguna
+namespace App\Http\Controllers\Pengguna; 
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -14,7 +14,7 @@ class ProfileController extends Controller
     public function index()
     {
         $user = Auth::user();
-        // Mengarahkan ke file blade profil milik daerah (pastikan file ini sudah kamu buat nanti)
+        
         return view('pengguna.profile', compact('user')); 
     }
 

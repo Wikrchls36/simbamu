@@ -26,7 +26,7 @@ class PeringatanController extends Controller
             'instruksi' => 'required|string',
         ]);
 
-        // 2. Simpan ke Database (Pastikan kolom 'status_konfirmasi' sesuai migration)
+        // 2. Simpan ke Database 
         Peringatan::create([
             'user_id' => $request->user_id,
             'tingkat_potensi' => $request->tingkat_potensi,
@@ -37,7 +37,7 @@ class PeringatanController extends Controller
         // 3. Ambil data penerima
         $penerima = User::find($request->user_id);
 
-        // PENGECEKAN: Menggunakan 'no_whatsapp' sesuai struktur databasemu
+        // PENGECEKAN: Menggunakan 'no_whatsapp' 
         if ($penerima && $penerima->no_whatsapp) {
             
             // Format pesan WhatsApp
@@ -49,7 +49,7 @@ class PeringatanController extends Controller
             $pesanWa .= "Mohon segera cek dashboard SIMBAMU untuk melakukan konfirmasi.\n";
             $pesanWa .= "_Pesan ini dikirim otomatis oleh sistem SIMBAMU MDMC Wilayah Kalbar._";
 
-            // 4. PROSES KIRIM WA - MENGGUNAKAN CURL (LEBIH STABIL DI LOCALHOST)
+            // 4. PROSES KIRIM WA - MENGGUNAKAN CURL 
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
@@ -62,14 +62,14 @@ class PeringatanController extends Controller
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => 'POST',
                 CURLOPT_POSTFIELDS => array(
-                    'target' => $penerima->no_whatsapp, // Menggunakan no_whatsapp
+                    'target' => $penerima->no_whatsapp, 
                     'message' => $pesanWa,
                     'countryCode' => '62',
                 ),
                 CURLOPT_HTTPHEADER => array(
-                    'Authorization: hS73fPaAWBpsJatYgAED' // Token Fonnte kamu
+                    'Authorization: hS73fPaAWBpsJatYgAED' // Token Fonnte 
                 ),
-                CURLOPT_SSL_VERIFYPEER => false, // Mengabaikan SSL di Localhost agar tembus
+                CURLOPT_SSL_VERIFYPEER => false, 
             ));
 
             $response = curl_exec($curl);

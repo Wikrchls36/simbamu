@@ -38,10 +38,10 @@ class UserController extends Controller
         'Ketapang' => ['lat' => -1.8507, 'lng' => 109.9715]
     ];
 
-    // 2. Ambil daftar daerah yang SUDAH memiliki akun dari database
+    // 2. Ambil daftar daerah yang sudah memiliki akun dari database
     $usedRegencies = \App\Models\User::whereNotNull('regency')->pluck('regency')->toArray();
 
-    // 3. Filter: Ambil daerah yang BELUM ada di database saja
+    // 3. untuk memfilter daerah yang belum terdaftar saja
     $regencies = array_filter($allRegencies, function($key) use ($usedRegencies) {
         return !in_array($key, $usedRegencies);
     }, ARRAY_FILTER_USE_KEY);
@@ -67,19 +67,19 @@ class UserController extends Controller
 
         // Simpan ke database
         User::create([
-            'name' => 'MDMC ' . $request->regency, // Otomatisasi nama (Contoh: MDMC Sintang)
+            'name' => 'MDMC ' . $request->regency, 
             'email' => $request->email,
             'regency' => $request->regency,
             'no_whatsapp' => $request->no_whatsapp,
             'password' => Hash::make($request->password),
-            'latitude' => $coords[0] ?? null, // Mengambil titik lintang
-            'longitude' => $coords[1] ?? null, // Mengambil titik bujur
+            'latitude' => $coords[0] ?? null, 
+            'longitude' => $coords[1] ?? null, 
         ]);
 
         return redirect('/users')->with('success', 'Akun MDMC Daerah berhasil didaftarkan!');
     }
     // Menghapus akun pengguna
-    public function destroy($id) // Harus $id, sesuai dengan {id} di web.php
+    public function destroy($id) 
     {
         $user = \App\Models\User::findOrFail($id);
         $user->delete();
@@ -100,17 +100,17 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        // Validasi: Email harus unik, kecuali untuk email milik user ini sendiri
+        
         $request->validate([
             'email' => 'required|email|unique:users,email,' . $id,
             'no_whatsapp' => 'required|numeric',
-            'password' => 'nullable|min:8|confirmed', // Nullable artinya boleh kosong jika tidak ganti password
+            'password' => 'nullable|min:8|confirmed', 
         ]);
 
         $user->email = $request->email;
         $user->no_whatsapp = $request->no_whatsapp;
 
-        // Logika: Hanya update password jika kolom password diisi
+        
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
         }

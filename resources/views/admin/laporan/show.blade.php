@@ -68,7 +68,7 @@
         
         <div class="bg-light border-bottom p-3 px-4 d-flex justify-content-between align-items-center">
             <div class="text-muted small fw-medium">
-                <i class="fas fa-clock me-1"></i> Diperbarui: {{ \Carbon\Carbon::parse($currentSitrep->updated_at)->timezone('Asia/Jakarta')->translatedFormat('d F Y, H:i') }} WIB
+                <i class="fas fa-clock me-1"></i> Diperbarui: {{ \Carbon\Carbon::parse($currentSitrep->updated_at)->timezone('Asia/Jakarta')->locale('id')->translatedFormat('d F Y, H:i') }} WIB
             </div>
             <a href="{{ route('admin.laporan.pdf', $currentSitrep->id) }}" class="btn btn-primary btn-sm rounded-pill px-4 fw-bold shadow-sm" target="_blank">
                 <i class="fas fa-file-pdf me-2"></i> Download PDF
@@ -94,7 +94,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="info-label">Tanggal Keluar SitRep</div>
-                    <div class="info-value fw-bold text-dark">{{ \Carbon\Carbon::parse($currentSitrep->tanggal_sitrep)->locale('id')->translatedFormat('d F Y') }}</div>
+                    <strong>{{ \Carbon\Carbon::parse($currentSitrep->tanggal_sitrep)->locale('id')->translatedFormat('d F Y') }}</strong>
                 </div>
             </div>
 
@@ -320,11 +320,11 @@
                 $lampirans = [];
                 $raw_foto = $currentSitrep->foto_dokumentasi ?? null;
                 
-                // Logika Pintar: Bongkar JSON jika datanya adalah Array Multi-Foto
+                
                 if (is_string($raw_foto) && strpos($raw_foto, '[') === 0) {
                     $lampirans = json_decode($raw_foto, true);
                 } elseif (is_string($raw_foto) && !empty($raw_foto)) {
-                    $lampirans = [$raw_foto]; // Jika foto lama tunggal
+                    $lampirans = [$raw_foto]; 
                 } elseif (is_array($raw_foto)) {
                     $lampirans = $raw_foto;
                 }

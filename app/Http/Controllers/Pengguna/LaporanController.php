@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class LaporanController extends Controller
 {
-    // Menampilkan riwayat laporan yang pernah dikirim daerah ini
+    // Menampilkan riwayat laporan yang pernah dikirim daerah
     public function index()
     {
         $logLaporan = Laporan::where('user_id', Auth::id())
@@ -21,7 +21,7 @@ class LaporanController extends Controller
         return view('pengguna.laporan.index', compact('logLaporan'));
     }
 
-    // Untuk menampilkan markup di peta
+    // Untuk menampilkan simbol di peta
     public function peta()
     {
         $semuaLaporan = Laporan::with('user')->where('status', 'Aktif')->get();
@@ -34,7 +34,7 @@ class LaporanController extends Controller
         return view('pengguna.laporan.create');
     }
 
-    // Memproses data dari form dan menyimpan ke database (SITREP 1)
+    // Memproses data dari form dan menyimpan ke database 
     public function store(Request $request)
     {
         $laporan = Laporan::create([
@@ -45,7 +45,7 @@ class LaporanController extends Controller
             'status' => 'Aktif',
         ]);
 
-        // LOGIKA BARU: Menangani Multiple Upload Foto SitRep 1
+        // Untuk mengupload lebih dari 1 foto
         $fotoPath = null;
         if ($request->hasFile('foto_dokumentasi')) {
             $path_fotos = [];
@@ -53,7 +53,7 @@ class LaporanController extends Controller
             foreach ($request->file('foto_dokumentasi') as $foto) {
                 $path_fotos[] = $foto->store('sitrep_lampiran', 'public');
             }
-            // Ubah array path gambar menjadi format JSON teks
+            
             $fotoPath = json_encode($path_fotos);
         }
 
@@ -61,11 +61,9 @@ class LaporanController extends Controller
             'laporan_id' => $laporan->id,
             'update_ke' => 1,
             'tanggal_sitrep' => $request->tanggal_sitrep,
-            
             'wk_waktu' => json_encode($request->wk_waktu ?? []),
             'wk_kejadian' => json_encode($request->wk_kejadian ?? []),
             'wk_lokasi' => json_encode($request->wk_lokasi ?? []),
-            
             'dampak_meninggal' => $request->dampak_meninggal ?? 0,
             'dampak_luka' => $request->dampak_luka ?? 0,
             'dampak_hilang' => $request->dampak_hilang ?? 0,
@@ -74,18 +72,14 @@ class LaporanController extends Controller
             'dampak_material' => $request->dampak_material,
             'lokasi_poskor' => $request->lokasi_poskor,
             'lokasi_pos_pelayanan' => $request->lokasi_pos_pelayanan,
-            
             'kronologi' => $request->kronologi,
             'situasi_terkini' => $request->situasi_terkini,
-            
             'resp_kluster' => json_encode($request->resp_kluster ?? []),
             'resp_lokasi' => json_encode($request->resp_lokasi ?? []),
             'resp_keterangan' => json_encode($request->resp_keterangan ?? []),
-            
             'pm_kegiatan' => json_encode($request->pm_kegiatan ?? []),
             'pm_tanggal' => json_encode($request->pm_tanggal ?? []),
             'pm_jumlah' => json_encode($request->pm_jumlah ?? []),
-            
             'tim_kluster' => json_encode($request->tim_kluster ?? []),
             'tim_total' => json_encode($request->tim_total ?? []),
             'tim_pulang' => json_encode($request->tim_pulang ?? []),
@@ -94,27 +88,22 @@ class LaporanController extends Controller
             'tim_laki' => $request->tim_laki ?? 0,
             'tim_perempuan' => $request->tim_perempuan ?? 0,
             'asal_instansi' => $request->asal_instansi,
-            
             'keb_item' => json_encode($request->keb_item ?? []),
             'keb_jumlah' => json_encode($request->keb_jumlah ?? []),
-            
             'sumber_informasi' => $request->sumber_informasi,
             'cp_nama' => json_encode($request->cp_nama ?? []),
             'cp_nohp' => json_encode($request->cp_nohp ?? []),
-            
             'rekening_donasi' => $request->rekening_donasi,
             'penutup_lokasi' => $request->penutup_lokasi,
             'penutup_tanggal' => date('Y-m-d'),
             'penutup_nama_tim' => $request->penutup_nama_tim,
-            
-            // Simpan foto dalam format JSON string
             'foto_dokumentasi' => $fotoPath,
         ]);
 
         return redirect()->route('pengguna.laporan.index')->with('success', 'SitRep #1 berhasil dikirim dan Peta telah diperbarui!');
     }
 
-    // Menampilkan halaman Detail dengan Pagination SitRep
+    // Menampilkan halaman Detail Laporan dengan Pagination 
     public function show($id, Request $request)
     {
         $laporan = Laporan::with('updates')->findOrFail($id);
@@ -134,7 +123,7 @@ class LaporanController extends Controller
     {
         $sitrep = \App\Models\LaporanUpdate::with('laporan')->findOrFail($update_id);
         
-        // KUNCI GANDA: Jika user yang login BUKAN pemilik laporan, tolak aksesnya!
+        // Agar pengguna lain tidak bisa mengunduh laporan dari pengguna lain
         if ($sitrep->laporan->user_id != \Auth::id()) {
             abort(403, 'Akses Ditolak: Anda tidak memiliki izin untuk mengunduh laporan daerah lain.');
         }
@@ -142,7 +131,7 @@ class LaporanController extends Controller
         return view('pengguna.laporan.pdf', compact('sitrep'));
     }
 
-    // Menampilkan halaman Form Update SitRep
+    // Menampilkan halaman form update laporan
     public function createUpdate($id)
     {
         $laporan = Laporan::with('updates')->findOrFail($id);
@@ -151,7 +140,7 @@ class LaporanController extends Controller
         return view('pengguna.laporan.update_create', compact('laporan', 'latestSitrep'));
     }
 
-    // Memproses data dari Form Update SitRep (SITREP LANJUTAN)
+    // Memproses data dari Form Update laporan
     public function storeUpdate(Request $request, $id)
     {
         $laporan = Laporan::findOrFail($id);
@@ -159,7 +148,7 @@ class LaporanController extends Controller
         $latestSitrep = $laporan->updates->last();
         $fotoPath = $latestSitrep ? $latestSitrep->foto_dokumentasi : null;
 
-        // LOGIKA BARU: Menangani Multiple Upload Foto SitRep Lanjutan
+        // Untuk mengupload lebih dari 1 foto
         if ($request->hasFile('foto_dokumentasi')) {
             $path_fotos = [];
             foreach ($request->file('foto_dokumentasi') as $foto) {
@@ -174,7 +163,6 @@ class LaporanController extends Controller
             'wk_waktu' => json_encode($request->wk_waktu ?? []),
             'wk_kejadian' => json_encode($request->wk_kejadian ?? []),
             'wk_lokasi' => json_encode($request->wk_lokasi ?? []),
-
             'dampak_meninggal' => $request->dampak_meninggal ?? 0,
             'dampak_luka' => $request->dampak_luka ?? 0,
             'dampak_hilang' => $request->dampak_hilang ?? 0,
@@ -183,18 +171,14 @@ class LaporanController extends Controller
             'dampak_material' => $request->dampak_material,
             'lokasi_poskor' => $request->lokasi_poskor,
             'lokasi_pos_pelayanan' => $request->lokasi_pos_pelayanan,
-
             'kronologi' => $request->kronologi,
             'situasi_terkini' => $request->situasi_terkini,
-
             'resp_kluster' => json_encode($request->resp_kluster ?? []),
             'resp_lokasi' => json_encode($request->resp_lokasi ?? []),
             'resp_keterangan' => json_encode($request->resp_keterangan ?? []),
-
             'pm_kegiatan' => json_encode($request->pm_kegiatan ?? []),
             'pm_tanggal' => json_encode($request->pm_tanggal ?? []),
             'pm_jumlah' => json_encode($request->pm_jumlah ?? []),
-
             'tim_kluster' => json_encode($request->tim_kluster ?? []),
             'tim_total' => json_encode($request->tim_total ?? []),
             'tim_pulang' => json_encode($request->tim_pulang ?? []),
@@ -203,20 +187,15 @@ class LaporanController extends Controller
             'tim_laki' => $request->tim_laki ?? 0,
             'tim_perempuan' => $request->tim_perempuan ?? 0,
             'asal_instansi' => $request->asal_instansi,
-
             'keb_item' => json_encode($request->keb_item ?? []),
             'keb_jumlah' => json_encode($request->keb_jumlah ?? []),
-
             'sumber_informasi' => $request->sumber_informasi,
             'cp_nama' => json_encode($request->cp_nama ?? []),
             'cp_nohp' => json_encode($request->cp_nohp ?? []),
-
             'rekening_donasi' => $request->rekening_donasi,
             'penutup_lokasi' => $request->penutup_lokasi,
             'penutup_tanggal' => date('Y-m-d'), 
             'penutup_nama_tim' => $request->penutup_nama_tim,
-            
-            // Simpan foto dalam format JSON string
             'foto_dokumentasi' => $fotoPath,
         ]);
 

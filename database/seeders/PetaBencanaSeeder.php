@@ -30,10 +30,8 @@ class PetaBencanaSeeder extends Seeder
 
         // Memasukkan setiap daerah ke tabel database
         foreach ($daerah as $nama) {
-            DB::table('peta_bencanas')->insert([
+            DB::table('peta_bencana')->insert([
                 'kabupaten_kota' => $nama,
-                'lat_center' => '0',   // Data dummy wajib diisi
-                'long_center' => '0',  // Data dummy wajib diisi
                 'potensi_banjir' => 'Rendah',
                 'luas_genangan' => 0,
                 'potensi_karhutla' => 'Rendah',

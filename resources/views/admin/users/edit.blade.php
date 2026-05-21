@@ -87,12 +87,12 @@
 
 <footer class="text-center py-4 mt-5">
     <small class="text-muted">
-        <i class="far fa-copyright"></i> MDMC KALIMANTAN BARAT 2026 - SOLID BERGERAK MONITOR | DIKELOLA OLEH BIDANG DATA DAN INFORMASI
+        <i class="far fa-copyright"></i> MDMC KALIMANTAN BARAT 2026 - SOLID BERGERAK MONITOR | DIKELOLA OLEH BIDANG TANGGAP DARURAT
     </small>
 </footer>
 
 <script>
-    // Logika Intip Password
+   
     function toggleVisibility(inputId, iconElement) {
         const input = document.getElementById(inputId);
         if (input.type === "password") {
@@ -107,7 +107,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    // Logika Animasi SweetAlert yang Benar
+    
     @if(session('success'))
         Swal.fire({
             icon: 'success',

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use App\Models\Laporan; // Pastikan model Laporan terpanggil
+use App\Models\Laporan; 
 
 class DashboardController extends Controller
 {
@@ -17,7 +17,7 @@ class DashboardController extends Controller
         // 1. Jika yang login adalah MDMC Daerah
         if ($user->role === 'daerah') {
             
-            // PERBAIKAN: Hitung laporan milik daerah ini saja
+            //  Hitung laporan milik daerah 
             $jumlahLaporan = Laporan::where('user_id', $user->id)->count();
             
             // Kirim variabel jumlahLaporan ke file blade daerah
@@ -27,10 +27,10 @@ class DashboardController extends Controller
         // 2. Jika yang login adalah MDMC Wilayah (Admin)
         if ($user->role === 'admin') {
             
-            // Hanya hitung user yang rolenya 'daerah'
+            // Menghitung jumlah pengguna 'daerah'
             $jumlahPengguna = User::where('role', 'daerah')->count();
             
-            // Hitung SEMUA laporan dari seluruh daerah di database
+            // Menghitung jumlah laporan dari seluruh daerah di database
             $jumlahLaporan = Laporan::count(); 
             
             return view('admin.dashboard', compact('user', 'jumlahPengguna', 'jumlahLaporan')); 

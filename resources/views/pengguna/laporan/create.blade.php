@@ -278,17 +278,17 @@ Tim MDMC ………….</p>
 </script>
 
 <script>
-    // Script Mencegah Double Submit & Menampilkan Efek Loading
+    
     document.querySelector('form').addEventListener('submit', function(e) {
         let submitBtn = this.querySelector('button[type="submit"]');
         
-        // Ubah teks tombol dan tambahkan animasi putar (spinner)
+        
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> SEDANG MENGIRIM...';
         
-        // Matikan tombol agar tidak bisa diklik lagi
+       
         submitBtn.disabled = true;
         
-        // Sedikit meredupkan tombol Batal agar user fokus menunggu
+       
         let cancelBtn = this.querySelector('.btn-light');
         if(cancelBtn) cancelBtn.style.pointerEvents = 'none';
     });

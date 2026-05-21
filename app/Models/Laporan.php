@@ -9,6 +9,7 @@ class Laporan extends Model
 {
     use HasFactory;
 
+    protected $table = 'laporan';
     protected $fillable = ['user_id', 'jenis_bencana', 'latitude', 'longitude', 'status'];
 
     public function user() { return $this->belongsTo(User::class); }

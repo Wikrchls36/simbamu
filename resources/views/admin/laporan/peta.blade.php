@@ -24,7 +24,7 @@
         }
         .btn-back-floating:hover { transform: scale(1.05); box-shadow: 0 6px 12px rgba(0,0,0,0.3); color: #000; }
 
-        /* Custom Marker Styles - SUDAH DIRAPIKAN & DIPERBAIKI */
+        
         .custom-marker { 
             background: #0d6efd; color: white; border-radius: 50%; width: 40px; height: 40px; 
             display: flex; align-items: center; justify-content: center; 
@@ -32,12 +32,12 @@
             font-size: 18px; transition: transform 0.2s;
         }
         .custom-marker:hover { transform: scale(1.1); }
-        /* PERBAIKAN: Menyesuaikan nama class dengan JavaScript (marker-karhutla) */
+        
         .custom-marker.marker-karhutla { background: #dc3545 !important; }
 
         .leaflet-control-zoom { border: none !important; box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important; }
 
-        /* CSS KHUSUS POPUP LEAFLET */
+       
         .leaflet-popup-content-wrapper { border-radius: 12px; padding: 0; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
         .leaflet-popup-content { margin: 0; width: 340px !important; }
         .popup-custom { font-family: 'Poppins', sans-serif; font-size: 12px; color: #333; }
@@ -70,7 +70,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
-        // Inisialisasi Peta
+        // Peta
         var map = L.map('map', { zoomControl: false }).setView([-0.27878, 111.4752], 7);
         L.control.zoom({ position: 'bottomleft' }).addTo(map);
 
@@ -78,11 +78,11 @@
            attribution: '© MDMC Kalbar | SIMBAMU'
         }).addTo(map);
 
-        // Render data laporan menggunakan Blade Engine
+        // Render data laporan 
         @foreach($laporans as $item)
             @php 
                 $latest = $item->updates->last(); 
-                // Gunakan latitude/longitude dari laporan, jika kosong gunakan koordinat default user
+                
                 $lat = $item->latitude ?? ($item->user->latitude ?? -0.27878);
                 $lng = $item->longitude ?? ($item->user->longitude ?? 111.4752);
             @endphp
@@ -99,12 +99,12 @@
                     html: `<div class="custom-marker ${markerClass}">${iconHtml}</div>`,
                     iconSize: [40, 40],
                     iconAnchor: [20, 20],
-                    popupAnchor: [0, -15] // Posisi popup agar tidak menutupi marker
+                    popupAnchor: [0, -15] 
                 });
 
                 var marker = L.marker(latLng, {icon: customIcon}).addTo(map);
 
-                // KONTEN POPUP
+                //  POP UP
                 var popupContent = `
                     <div class="popup-custom">
                         <div class="popup-header">

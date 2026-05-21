@@ -14,7 +14,7 @@
         :root { --mdmc-blue: #0047ba; --mdmc-light-blue: #1aa4f6; }
         body { font-family: 'Poppins', sans-serif; background-color: #f4f7fa; overflow-x: hidden; }
         
-        /* SIDEBAR & NAVBAR */
+      /
         #sidebar { width: 280px; min-height: 100vh; background: var(--mdmc-light-blue); transition: all 0.3s; position: fixed; z-index: 1000; display: flex; flex-direction: column; }
         #sidebar.active { margin-left: -280px; }
         .sidebar-header { height: 70px; display: flex; align-items: center; justify-content: center; background: #fff; border-bottom: 1px solid #eee; position: relative; }
@@ -31,7 +31,7 @@
         @media (max-width: 992px) { #sidebar { margin-left: -280px; } #sidebar.show { margin-left: 0; } #content { width: 100%; margin-left: 0; } }
         .profile-toggle-btn::after { display: none !important; }
 
-        /* KUSTOMISASI KARTU PROFIL MILIKMU */
+        
         .profile-card { border-radius: 8px; border: 1px solid #ccc; background: #fff; max-width: 550px; margin: 0 auto; }
         .profile-photo-wrapper { position: relative; width: 120px; height: 120px; margin: 0 auto 30px; }
         .profile-photo { width: 100%; height: 100%; border-radius: 50%; border: 1px solid #ccc; object-fit: cover; padding: 5px; background: #fff; }
@@ -58,7 +58,7 @@
 
 <div class="d-flex">
     
-    <!-- SIDEBAR -->
+   
     <nav id="sidebar">
         <div class="sidebar-header">
             <img src="{{ asset('images/logo-mdmc.png') }}" height="40" alt="Logo" onerror="this.style.display='none'">
@@ -73,7 +73,7 @@
     </nav>
 
     <div id="content">
-        <!-- NAVBAR -->
+        
         <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4">
             <button type="button" id="sidebarCollapse" class="btn btn-primary d-lg-none"><i class="fas fa-bars"></i></button>
             <h5 class="fw-bold m-0 ms-3 d-none d-md-block text-dark">Profil Saya</h5>
@@ -100,12 +100,12 @@
             </div>
         </nav>
 
-        <!-- KONTEN PROFIL (DESAIN MILIKMU) -->
+       
         <div class="container mt-5 mb-4 flex-grow-1">
             <div class="profile-card p-5 shadow-sm">
                 <h5 class="text-center fw-bold mb-4">Edit Profil</h5>
 
-                <!-- Validasi Error -->
+              
                 @if($errors->any())
                     <div class="alert alert-danger shadow-sm border-0 rounded-3">
                         <ul class="mb-0">
@@ -116,7 +116,7 @@
                     </div>
                 @endif
 
-                <!-- Form dengan Action yang sudah diarahkan ke Rute Pengguna -->
+                
                 <form action="{{ route('pengguna.profile.update') }}" method="POST" id="profileForm">
                     @csrf
                     
@@ -135,13 +135,13 @@
 
                     <div class="mb-4">
                         <label class="form-label">Nama</label>
-                        <!-- PENTING: Ditambahkan name="name" agar tidak error saat disimpan -->
+                        
                         <input type="text" name="name" class="form-control input-readonly" value="{{ $user->name }}" readonly>
                     </div>
 
                     <div class="mb-4">
                         <label class="form-label">Email</label>
-                        <!-- PENTING: Ditambahkan name="email" agar tidak error saat disimpan -->
+                        
                         <input type="email" name="email" class="form-control input-readonly" value="{{ $user->email }}" readonly>
                     </div>
 
@@ -171,13 +171,13 @@
 
         <footer class="text-center py-4 mt-auto">
             <small class="text-muted">
-                <i class="far fa-copyright"></i> MDMC KALIMANTAN BARAT 2026 - SOLID BERGERAK MONITOR | DIKELOLA OLEH BIDANG DATA DAN INFORMASI
+                <i class="far fa-copyright"></i> MDMC KALIMANTAN BARAT 2026 - SOLID BERGERAK MONITOR | DIKELOLA OLEH BIDANG TANGGAP DARURAT
             </small>
         </footer>
     </div>
 </div>
 
-<!-- MODAL CROPPER -->
+
 <div class="modal fade" id="cropModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="cropModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -203,7 +203,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    // JS SIDEBAR
+   
     const sidebar = document.getElementById('sidebar');
     const sidebarCollapse = document.getElementById('sidebarCollapse');
     const closeSidebar = document.getElementById('closeSidebar');
@@ -213,7 +213,7 @@
     const hideSidebar = () => { sidebar.classList.remove('show'); sidebarOverlay.classList.remove('show'); };
     closeSidebar.addEventListener('click', hideSidebar); sidebarOverlay.addEventListener('click', hideSidebar);
 
-    // FITUR INTIP PASSWORD
+    
     function toggleVisibility(inputId, iconElement) {
         const input = document.getElementById(inputId);
         if (input.type === "password") {
@@ -225,7 +225,6 @@
         }
     }
 
-    // ANIMASI SWEETALERT2
     @if(session('success'))
         Swal.fire({
             icon: 'success',
@@ -249,7 +248,6 @@
         });
     @endif
 
-    // LOGIKA CROPPER JS
     let cropper;
     const profilePhotoInput = document.getElementById('profile_photo');
     const imageToCrop = document.getElementById('imageToCrop');

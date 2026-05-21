@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('peta_bencanas', function (Blueprint $table) {
+        Schema::create('peta_bencana', function (Blueprint $table) {
             $table->id();
             
             // Info Wilayah
@@ -32,6 +32,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('peta_bencanas');
+        Schema::dropIfExists('peta_bencana');
     }
 };

@@ -13,7 +13,6 @@
         :root { --mdmc-blue: #0047ba; --mdmc-light-blue: #1aa4f6; }
         body { font-family: 'Poppins', sans-serif; background-color: #f4f7fa; overflow-x: hidden; }
         
-        /* SIDEBAR FLEXBOX (Dari Referensi) */
         #sidebar {
             width: 280px; min-height: 100vh; background: var(--mdmc-light-blue);
             transition: all 0.3s; position: fixed; z-index: 1000;
@@ -42,14 +41,12 @@
             color: var(--mdmc-blue) !important; background: white; 
         }
         
-        /* OVERLAY UNTUK MOBILE */
         #sidebarOverlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(0,0,0,0.5); z-index: 999; display: none;
         }
         #sidebarOverlay.show { display: block; }
 
-        /* MAIN CONTENT & NAVBAR */
         #content { width: calc(100% - 280px); margin-left: 280px; transition: all 0.3s; min-height: 100vh; display: flex; flex-direction: column; }
         #content.active { width: 100%; margin-left: 0; }
         .navbar { height: 70px; }
@@ -59,14 +56,12 @@
         .profile-toggle-btn .profile-arrow { transition: transform 0.3s ease; }
         .profile-toggle-btn.show .profile-arrow { transform: rotate(180deg); }
 
-        /* RESPONSIVE MOBILE */
         @media (max-width: 992px) {
             #sidebar { margin-left: -280px; }
             #sidebar.show { margin-left: 0; }
             #content { width: 100%; margin-left: 0; }
         }
 
-        /* CUSTOM CSS KHUSUS PETA PREVIEW */
         #map-preview { 
             height: 450px; 
             width: 100%; 
@@ -161,7 +156,7 @@
 
          <footer class="text-center py-4 mt-auto">
             <small class="text-muted">
-                <i class="far fa-copyright"></i> MDMC KALIMANTAN BARAT 2026 - SOLID BERGERAK MONITOR | DIKELOLA OLEH BIDANG DATA DAN INFORMASI
+                <i class="far fa-copyright"></i> MDMC KALIMANTAN BARAT 2026 - SOLID BERGERAK MONITOR | DIKELOLA OLEH BIDANG TANGGAP DARURAT
             </small>
         </footer>
 
@@ -171,8 +166,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    // 1. INISIALISASI PETA PREVIEW
-    // Mengaktifkan zoomControl agar muncul tombol + dan - seperti di Admin
+    // PETA PREVIEW
     var map = L.map('map-preview', {
         zoomControl: true 
     }).setView([-0.2787, 111.4753], 6);
@@ -181,13 +175,12 @@
         attribution: '&copy; MDMC Kalbar | SIMBAMU'
     }).addTo(map);
 
-    // 2. LOAD GEOJSON KALBAR (POLYGON BIRU)
     fetch('/data/kalbar.geojson')
         .then(res => res.json())
         .then(data => {
             L.geoJSON(data, {
                 style: { 
-                    color: '#0047ba', // Garis Biru MDMC
+                    color: '#0047ba', 
                     weight: 1.5, 
                     fillColor: '#1aa4f6', 
                     fillOpacity: 0.1 

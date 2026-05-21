@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Download SitRep MDMC</title>
     <style>
-        /* DASAR & UKURAN A4 */
+        /* UKURAN A4 */
         body { margin: 0; padding: 0; background-color: #ffffff; }
         #render-area { width: 794px; margin: 0; padding: 30px 40px; box-sizing: border-box; background: white; font-family: Arial, sans-serif; }
 
@@ -28,31 +28,29 @@
         .info-col { display: table-cell; width: 33.33%; padding-right: 5px; vertical-align: top; }
         .info-label { font-size: 10px; color: #666; text-transform: uppercase; font-weight: bold; display: block; margin-bottom: 3px; }
 
-        /* KODE BARU: GRID FOTO ANTI TERPOTONG */
+        
         .foto-grid {
             text-align: center;
             margin-top: 20px;
             width: 100%;
-            font-size: 0; /* Menghilangkan jarak bawaan inline-block */
+            font-size: 0; 
         }
         .foto-item {
             display: inline-block;
-            width: 46%; /* Mengambil hampir setengah halaman (2 kolom) */
-            margin: 0 2% 20px 2%; /* Jarak antar foto */
+            width: 46%; 
+            margin: 0 2% 20px 2%; 
             vertical-align: top;
-            page-break-inside: avoid; /* Memaksa pindah halaman jika terpotong */
+            page-break-inside: avoid; 
             break-inside: avoid;
         }
         .foto-item img {
             max-width: 100%;
-            max-height: 280px; /* Disesuaikan agar proporsional di grid */
-            border: 2px solid #333;
+            max-height: 280px; 
             padding: 5px;
-            box-sizing: border-box;
             background-color: #fff;
         }
 
-        /* LOADER */
+       
         #loading { position: fixed; top:0; left:0; width:100%; height:100%; background:white; display:flex; flex-direction:column; justify-content:center; align-items:center; z-index:99; }
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #0047ba; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }

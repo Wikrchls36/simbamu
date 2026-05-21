@@ -12,9 +12,6 @@ use App\Models\User;
 
 class ProfileController extends Controller
 {
-    // ---------------------------------------------------------
-    // 1. BAGIAN PROFIL UMUM (FOTO, INFO, & PASSWORD)
-    // ---------------------------------------------------------
     
     public function index()
     {
@@ -27,11 +24,9 @@ class ProfileController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        // 1. Validasi Gabungan (Teks Lengkap & Password)
+        // 1. Validasi 
         $request->validate([
-            'name'        => 'required|string|max:255',
-            'email'       => 'required|email|max:255|unique:users,email,' . $user->id,
-            'no_whatsapp' => 'nullable|string|max:20',
+            'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'password'    => 'nullable|min:8|confirmed',
         ], [
             'password.min'       => 'Password baru minimal harus 8 karakter.',
@@ -40,16 +35,7 @@ class ProfileController extends Controller
 
         $isUpdated = false;
 
-        // 2. Logika Update Data Teks (Nama, Email, WA)
-        // Mengecek apakah ada ketikan yang berbeda dari database sebelumnya
-        if ($user->name !== $request->name || $user->email !== $request->email || $user->no_whatsapp !== $request->no_whatsapp) {
-            $user->name = $request->name;
-            $user->email = $request->email;
-            $user->no_whatsapp = $request->no_whatsapp;
-            $isUpdated = true;
-        }
-
-        // 3. Logika Update Foto (Cropper Base64) - Milikmu yang tidak saya ubah
+        // 2. Logika Update Foto 
         if ($request->filled('cropped_photo')) {
             $image_parts = explode(";base64,", $request->cropped_photo);
             if (count($image_parts) == 2) {
@@ -66,7 +52,7 @@ class ProfileController extends Controller
             }
         }
 
-        // 4. Logika Update Password - Milikmu
+        // 4. Logika Update Password 
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
             $isUpdated = true;

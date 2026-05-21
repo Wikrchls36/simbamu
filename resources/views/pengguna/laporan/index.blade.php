@@ -11,9 +11,6 @@
         :root { --mdmc-blue: #0047ba; --mdmc-light-blue: #1aa4f6; }
         body { font-family: 'Poppins', sans-serif; background-color: #f4f7fa; overflow-x: hidden; }
         
-        /* ====================================================
-           SIDEBAR CSS (SINKRON 100% MURNI DENGAN BERANDA)
-           ==================================================== */
         #sidebar {
             width: 280px; min-height: 100vh; background: var(--mdmc-light-blue);
             transition: all 0.3s; position: fixed; z-index: 1000;
@@ -38,25 +35,23 @@
             border-radius: 8px; display: flex; align-items: center; text-decoration: none;
         }
 
-        /* Class active dibuang agar tidak ada blok putih permanen, murni hanya hover */
+        
         .nav-link:hover { color: var(--mdmc-blue) !important; background: white; }
         
-        /* OVERLAY UNTUK MOBILE */
+       
         #sidebarOverlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(0,0,0,0.5); z-index: 999; display: none;
         }
         #sidebarOverlay.show { display: block; }
 
-        /* ====================================================
-           MAIN CONTENT & NAVBAR
-           ==================================================== */
+       
         #content { width: calc(100% - 280px); margin-left: 280px; transition: all 0.3s; min-height: 100vh; display: flex; flex-direction: column;}
         #content.active { width: 100%; margin-left: 0; }
         .navbar { height: 70px; }
         .profile-img { width: 40px; height: 40px; border-radius: 50%; border: 1px solid #ddd; padding: 2px; }
 
-        /* Responsive Mobile */
+       
         @media (max-width: 992px) {
             #sidebar { margin-left: -280px; }
             #sidebar.show { margin-left: 0; }
@@ -66,9 +61,7 @@
         .profile-toggle-btn .profile-arrow { transition: transform 0.3s ease; }
         .profile-toggle-btn.show .profile-arrow { transform: rotate(180deg); }
 
-        /* ====================================================
-           KONTEN HALAMAN LAPORAN
-           ==================================================== */
+        
         .info-card {
             border-radius: 16px; padding: 24px 30px; color: white;
             position: relative; overflow: hidden; border: none; min-height: 140px;
@@ -96,9 +89,7 @@
 
 <div class="d-flex">
     
-    <!-- ====================================================
-         SIDEBAR HTML (PERSIS KODE BERANDA)
-         ==================================================== -->
+    
     <nav id="sidebar">
         <div class="sidebar-header">
             <img src="{{ asset('images/logo-mdmc.png') }}" height="40" alt="Logo" onerror="this.style.display='none'">
@@ -210,10 +201,10 @@
                                 <tr>
                                     <td class="fw-bold text-muted">{{ $loop->iteration }}</td>
                                     
-                                    <!-- PERBAIKAN: Tanggal dengan locale ID -->
+                                   
                                     <td>{{ \Carbon\Carbon::parse($lap->created_at)->timezone('Asia/Jakarta')->locale('id')->translatedFormat('d F Y') }}</td>
                                     
-                                    <!-- PERBAIKAN: Update Waktu dengan locale ID -->
+                                   
                                     <td>
                                         {{ \Carbon\Carbon::parse($lap->updated_at)->timezone('Asia/Jakarta')->locale('id')->translatedFormat('d F Y,') }} <br>
                                         <strong class="text-dark">{{ \Carbon\Carbon::parse($lap->updated_at)->timezone('Asia/Jakarta')->translatedFormat('H.i') }} WIB</strong>
@@ -221,7 +212,7 @@
                                     
                                     <td class="text-muted">MDMC Wilayah Kalimantan Barat</td>
                                     
-                                    <!-- PERBAIKAN: Status Selesai menjadi Hijau -->
+                                    
                                     <td>
                                         @if($lap->status == 'Aktif')
                                             <span class="badge bg-primary px-3 py-2 shadow-sm rounded-pill">Aktif</span>
@@ -262,7 +253,7 @@
         
          <footer class="text-center py-4 mt-auto">
             <small class="text-muted">
-                <i class="far fa-copyright"></i> MDMC KALIMANTAN BARAT 2026 - SOLID BERGERAK MONITOR | DIKELOLA OLEH BIDANG DATA DAN INFORMASI
+                <i class="far fa-copyright"></i> MDMC KALIMANTAN BARAT 2026 - SOLID BERGERAK MONITOR | DIKELOLA OLEH BIDANG TANGGAP DARURAT
             </small>
         </footer>
     </div>
@@ -270,7 +261,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // JS SIDEBAR
+ 
     const sidebar = document.getElementById('sidebar');
     const sidebarCollapse = document.getElementById('sidebarCollapse');
     const closeSidebar = document.getElementById('closeSidebar');
@@ -289,7 +280,7 @@
     closeSidebar.addEventListener('click', hideSidebar);
     sidebarOverlay.addEventListener('click', hideSidebar);
 
-    // LOGIKA PENCARIAN
+  
     const searchInput = document.getElementById('searchInput');
     const logTableBody = document.getElementById('logTableBody');
 

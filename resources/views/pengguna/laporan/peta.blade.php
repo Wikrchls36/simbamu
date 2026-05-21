@@ -18,12 +18,12 @@
         .btn-back-floating { position: absolute; top: 90px; left: 20px; width: 45px; height: 45px; background-color: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #333; text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 1000; transition: all 0.3s ease; font-size: 1.1rem; }
         .btn-back-floating:hover { background-color: #f8f9fa; color: #000; transform: scale(1.05); }
 
-        /* Custom Marker CSS FontAwesome */
+        
         .custom-marker { background: #0d6efd; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border: 3px solid white; box-shadow: 0 4px 8px rgba(0,0,0,0.3); font-size: 18px; transition: transform 0.2s;}
         .custom-marker:hover { transform: scale(1.1); }
         .custom-marker.karhutla { background: #dc3545; }
 
-        /* CSS KHUSUS POPUP LEAFLET (SINKRON DENGAN WILAYAH) */
+        
         .leaflet-popup-content-wrapper { border-radius: 12px; padding: 0; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
         .leaflet-popup-content { margin: 0; width: 340px !important; }
         .popup-custom { font-family: 'Poppins', sans-serif; font-size: 12px; color: #333; }
@@ -59,14 +59,14 @@
         @foreach($semuaLaporan as $item)
             @php 
                 $latest = $item->updates->last(); 
-                // Antisipasi jika koordinat tidak ada
+                
                 $lat = $item->latitude ?? ($item->user->latitude ?? -0.0227);
                 $lng = $item->longitude ?? ($item->user->longitude ?? 109.3425);
             @endphp
             
             @if($latest)
                 
-                // Logika Ikon Marker (Otomatis Air/Api)
+                
                 var isBanjir = '{{ $item->jenis_bencana }}' === 'Banjir';
                 var iconHtml = isBanjir ? '<i class="fas fa-water"></i>' : '<i class="fas fa-fire"></i>';
                 var bgClass = isBanjir ? '' : 'karhutla';
@@ -76,13 +76,13 @@
                     html: `<div class="custom-marker ${bgClass}">${iconHtml}</div>`,
                     iconSize: [40, 40],
                     iconAnchor: [20, 20],
-                    popupAnchor: [0, -15] // Posisi popup agar pas di atas marker
+                    popupAnchor: [0, -15] 
                 });
 
                 var marker = L.marker([{{ $lat }}, {{ $lng }}], {icon: customIcon}).addTo(map);
                 
             
-                // Desain Pop-Up Miniatur SitRep (LENGKAP & MODERN)
+                
                 var popupContent = `
                     <div class="popup-custom">
                         <div class="popup-header">

@@ -6,20 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class PetaBencana extends Model
 {
-    // Beritahu Laravel untuk menggunakan nama tabel dari migrasi kamu
-    protected $table = 'peta_bencanas'; 
+    
+    protected $table = 'peta_bencana'; 
 
     protected $fillable = [
         'kabupaten_kota', 
-        'lat_center', 
-        'long_center', 
-        'geojson', 
         'potensi_banjir', 
         'luas_genangan', 
         'potensi_karhutla', 
         'jumlah_hotspot', 
         'sumber_data', 
-        // --- TAMBAHAN BARU DI BAWAH INI ---
         'tahun_banjir', 
         'jiwa_terdampak_banjir',
         'rumah_warga_banjir',

@@ -18,7 +18,7 @@
         .edit-photo-badge:hover { background: #bbb; }
         .form-label { font-weight: bold; font-size: 14px; margin-bottom: 5px; color: #000; }
         
-        /* Warna abu-abu gelap sesuai gambar untuk kolom yang dikunci */
+       
         .input-readonly { background-color: #9e9e9e !important; border-color: #888; color: #222; font-weight: 500; cursor: not-allowed; }
         
         .password-container { position: relative; }
@@ -92,7 +92,7 @@
             </div>
 
             <div class="d-flex justify-content-between">
-                <button type="button" onclick="window.history.back()" class="btn btn-kembali">Kembali</button>
+                <a href="/dashboard" class="btn btn-kembali text-decoration-none">Kembali</a>
                 <button type="submit" class="btn btn-simpan">Simpan</button>
             </div>
         </form>
@@ -121,7 +121,7 @@
 
 <footer class="text-center py-4 mt-5">
     <small class="text-muted">
-        <i class="far fa-copyright"></i> MDMC KALIMANTAN BARAT 2026 - SOLID BERGERAK MONITOR | DIKELOLA OLEH BIDANG DATA DAN INFORMASI
+        <i class="far fa-copyright"></i> MDMC KALIMANTAN BARAT 2026 - SOLID BERGERAK MONITOR | DIKELOLA OLEH BIDANG TANGGAP DARURAT
     </small>
 </footer>
 

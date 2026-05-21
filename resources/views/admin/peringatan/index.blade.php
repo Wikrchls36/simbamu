@@ -12,7 +12,7 @@
         :root { --mdmc-blue: #0047ba; --mdmc-light-blue: #1aa4f6; }
         body { font-family: 'Poppins', sans-serif; background-color: #f4f7fa; overflow-x: hidden; }
         
-        /* SIDEBAR FLEXBOX */
+       
         #sidebar {
             width: 280px; min-height: 100vh; background: var(--mdmc-light-blue);
             transition: all 0.3s; position: fixed; z-index: 1000;
@@ -41,7 +41,7 @@
             color: var(--mdmc-blue) !important; background: white; 
         }
         
-        /* OVERLAY UNTUK MOBILE */
+        
         #sidebarOverlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(0,0,0,0.5); z-index: 999; display: none;
@@ -58,18 +58,18 @@
         .profile-toggle-btn .profile-arrow { transition: transform 0.3s ease; }
         .profile-toggle-btn.show .profile-arrow { transform: rotate(180deg); }
 
-        /* CUSTOM CSS TABEL PERINGATAN */
+        /* TABEL PERINGATAN */
         .card-top-border { border-top: 4px solid var(--mdmc-light-blue) !important; }
         .table-custom th { color: #333; font-weight: 600; padding: 15px; border-bottom: 2px solid #ddd; }
         .table-custom td { vertical-align: middle; padding: 15px; border-bottom: 1px solid #eee; }
         
-        /* Indikator Status Potensi */
+        /* Status Potensi */
         .dot-indikator { height: 12px; width: 12px; border-radius: 50%; display: inline-block; margin-right: 8px; }
         .dot-monitoring { background-color: #00d26a; } /* Hijau */
         .dot-siaga { background-color: #ffc107; } /* Kuning */
         .dot-waspada { background-color: #f82649; } /* Merah */
 
-        /* Hover Tombol Aksi */
+        
         .btn-warning:hover {
             background-color: #ffca2c !important; /* Warna kuning menjadi sedikit lebih gelap */
             color: #000 !important; /* Memastikan teks tetap hitam/gelap */
@@ -83,7 +83,7 @@
             #content { width: 100%; margin-left: 0; }
         }
 
-        /*menghilangkan efek */
+        
         #searchInput:focus {
             box-shadow: none !important;
             border-color: #dee2e6 !important;
@@ -176,14 +176,14 @@
                 </div>
             @endif
 
-            {{-- 1. TABEL PENGGUNA (Tampilan Bersih & Sticky Header) --}}
+            {{-- 1. TABEL PENGGUNA  --}}
             <div class="card border-0 shadow-sm mb-5">
                 <div class="card-body p-0">
-                    {{-- Batas tinggi 300px agar tabel pengguna tidak memakan layar jika data kabupaten banyak --}}
+                
                     <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
                         <table class="table table-hover align-middle mb-0">
                             
-                            {{-- Header menempel di atas (Sticky) --}}
+                            
                             <thead class="bg-white" style="position: sticky; top: 0; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                                 <tr class="border-bottom">
                                     <th class="py-3 px-4 bg-white text-dark" style="width: 5%">No</th>
@@ -222,7 +222,7 @@
                 </div>
             </div>
 
-            {{-- 2. TABEL LOG PERINGATAN (Sesuai kodemu) --}}
+            {{-- 2. TABEL LOG PERINGATAN  --}}
             <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5">
                 <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-2 d-flex justify-content-between align-items-center flex-wrap gap-2">
                     <h6 class="fw-bold text-dark m-0">Log Instruksi & Peringatan</h6>
@@ -235,10 +235,10 @@
                 </div>
                 
                 <div class="card-body p-0">
-                    {{-- Batas tinggi 400px agar bisa di-scroll --}}
+                    
                     <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
                         <table class="table table-custom m-0 table-hover">
-                            {{-- Header menempel di atas (Sticky) --}}
+                        
                             <thead class="bg-white" style="position: sticky; top: 0; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                                 <tr>
                                     <th class="ps-4">Tanggal</th>
@@ -291,14 +291,14 @@
 
         <footer class="text-center py-4 mt-auto">
             <small class="text-muted">
-                <i class="far fa-copyright"></i> MDMC KALIMANTAN BARAT 2026 - SOLID BERGERAK MONITOR | DIKELOLA OLEH BIDANG DATA DAN INFORMASI
+                <i class="far fa-copyright"></i> MDMC KALIMANTAN BARAT 2026 - SOLID BERGERAK MONITOR | DIKELOLA OLEH BIDANG TANGGAP DARURAT
             </small>
         </footer>
 
     </div>
 </div>
 
-{{-- MODAL (Satu Modal Saja, di-handle oleh Javascript) --}}
+
 <div class="modal fade" id="modalPeringatan" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content rounded-4 border-0 shadow-lg">
@@ -354,20 +354,20 @@
     </div>
 </div>
 
-{{-- MODAL DETAIL RIWAYAT PERINGATAN --}}
+{{-- DETAIL RIWAYAT PERINGATAN --}}
 
 @foreach($peringatans as $log)
 <div class="modal fade" id="modalDetailPeringatan{{ $log->id }}" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content rounded-4 border-0 shadow-lg">
             
-            {{-- Header --}}
+        
             <div class="modal-header border-bottom flex-column align-items-start px-4 pt-4 pb-3">
                 <h6 class="fw-bold text-dark mb-2">Detail Peringatan Bencana</h6>
                 <h6 class="fw-bold text-dark m-0">Tujuan : {{ $log->user->asal_daerah ?? $log->user->name }}</h6>
             </div>
 
-            {{-- Body --}}
+            
             <div class="modal-body p-4 text-start">
                 <p class="fw-bold text-dark mb-2">Potensi Peringatan :</p>
                 <div class="d-flex align-items-center mb-4">
@@ -382,7 +382,7 @@
 
                 <p class="fw-bold text-dark mb-2">Detail Informasi</p>
                 <div class="ms-3 mb-3">
-                    {{-- PERBAIKAN 1: Menyesuaikan Zona Waktu ke WIB (Asia/Jakarta) --}}
+                    
                     <p class="fw-bold text-dark mb-1">Tanggal : {{ $log->created_at->timezone('Asia/Jakarta')->format('d F Y') }}</p>
                     <p class="fw-bold text-dark mb-3">Waktu : {{ $log->created_at->timezone('Asia/Jakarta')->format('H.i') }} WIB</p>
 
@@ -394,7 +394,7 @@
 
                 <div class="d-flex align-items-center">
                     <p class="fw-bold text-dark mb-0 me-2">Status Respon :</p>
-                    {{-- PERBAIKAN 2: Sinkronisasi Status dengan Tabel Log (Merah/Hijau) --}}
+                    
                     @if($log->status_konfirmasi == 'Telah Direspon' || $log->status_konfirmasi == 'Dikonfirmasi')
                         <span class="badge bg-success px-3 py-2 rounded-3 text-white fw-bold">Telah Direspon</span>
                     @else
@@ -403,7 +403,7 @@
                 </div>
             </div>
 
-            {{-- Footer --}}
+            
             <div class="modal-footer border-top-0 px-4 pb-4">
                 <button type="button" class="btn text-white fw-bold px-4 rounded-3" style="background-color: #a5a5a5;" data-bs-dismiss="modal">Tutup</button>
             </div>
@@ -415,7 +415,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // 1. Logika Sidebar Mobile
+    
     const sidebar = document.getElementById('sidebar');
     const sidebarCollapse = document.getElementById('sidebarCollapse');
     const closeSidebar = document.getElementById('closeSidebar');
@@ -425,7 +425,7 @@
     const hideSidebar = () => { sidebar.classList.remove('show'); sidebarOverlay.classList.remove('show'); };
     closeSidebar.addEventListener('click', hideSidebar); sidebarOverlay.addEventListener('click', hideSidebar);
 
-    // 2. Logika Modal Peringatan (Mengisi ID dan Nama tujuan otomatis)
+    
     const modalPeringatan = document.getElementById('modalPeringatan');
     modalPeringatan.addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget;
@@ -436,9 +436,6 @@
         document.getElementById('inputIdTujuan').value = idDaerah; // Memasukkan ID ke input hidden
     });
 
-    
-
-    // 3. Auto-hide Alert Sukses
     document.addEventListener("DOMContentLoaded", function() {
         const alertElement = document.getElementById("success-alert");
         if (alertElement) {
@@ -450,7 +447,7 @@
     });
 
 
-    // 4. Logika Pencarian Tabel Log (Real-time)
+    // Pencarian 
     const searchInput = document.getElementById('searchInput');
     const logTableBody = document.getElementById('logTableBody');
 
@@ -460,14 +457,14 @@
             let rows = logTableBody.getElementsByTagName('tr');
 
             for (let i = 0; i < rows.length; i++) {
-                // Abaikan baris kosong ("Belum ada riwayat...")
+                
                 if (rows[i].getElementsByTagName('td')[0].colSpan > 1) {
                     continue; 
                 }
 
                 let rowText = rows[i].textContent.toLowerCase();
                 
-                // Jika teks baris cocok dengan pencarian, tampilkan. Jika tidak, sembunyikan.
+               
                 if (rowText.includes(filterValue)) {
                     rows[i].style.display = '';
                 } else {

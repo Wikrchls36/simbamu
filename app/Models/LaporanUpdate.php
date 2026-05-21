@@ -12,7 +12,7 @@ class LaporanUpdate extends Model
     // Mengizinkan semua kolom diisi
     protected $guarded = [];
 
-    // AUTO-CONVERT ARRAY KE JSON
+    
     protected $casts = [
         'wk_waktu' => 'array',
         'wk_kejadian' => 'array',

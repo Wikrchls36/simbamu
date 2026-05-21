@@ -14,7 +14,6 @@
         body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
         
-        /* Pastikan header memenuhi layar dan memiliki background putih */
         .map-header {
             height: 70px;
             background: white;
@@ -23,14 +22,14 @@
             z-index: 1000;
         }
 
-        /* Mengatur ukuran dan jarak logo agar proporsional */
+
         .mdmc-logo-header {
-            height: 40px; /* Menyesuaikan tinggi header */
+            height: 40px; 
             width: auto;
-            object-fit: contain; /* Mencegah gambar gepeng */
+            object-fit: contain; 
         }
 
-        /* Tombol Kembali Lingkaran (Minimalis) */
+        
         .btn-back-circle {
             border-radius: 50%;
             width: 50px;
@@ -40,17 +39,16 @@
             justify-content: center;
             font-size: 20px;
             color: #333;
-            flex-shrink: 0; /* Mencegah tombol mengecil */
+            flex-shrink: 0; 
         }
         
-        /* Area Peta Full Layar */
+        
         #map { height: calc(100vh - 70px); width: 100%; z-index: 1; }
 
-        /* Tombol Kembali & Filter Mengambang */
-        /* Tombol Kembali Mengambang di atas peta */
+      
         .btn-back { 
             position: absolute; 
-            top: 90px; /* 70px tinggi header + 20px jarak */
+            top: 90px; 
             left: 20px; 
             z-index: 1000; 
             border-radius: 50%; 
@@ -73,7 +71,7 @@
             box-shadow: 0 2px 15px rgba(0,0,0,0.15); 
             min-width: 150px; }
         
-       /* Legenda Custom Horizontal */
+      
         .info.legend {
             background: white;
             padding: 12px 15px;
@@ -87,7 +85,7 @@
         .legend-colors { display: flex; height: 18px; border-radius: 4px; overflow: hidden; }
         .legend-colors span { flex: 1; }
         
-        /* Custom Popup */
+       
         .leaflet-popup-content { margin: 15px; min-width: 180px;}
     </style>
 </head>
@@ -127,7 +125,7 @@
 
    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // 1. Inisialisasi Peta
+        // Peta
         var map = L.map('map', { zoomControl: false }).setView([-0.2787, 111.4753], 7);
         L.control.zoom({ position: 'bottomleft' }).addTo(map);
 
@@ -135,11 +133,11 @@
             attribution: '© MDMC Kalbar | SIMBAMU'
         }).addTo(map);
 
-        // 2. Tangkap Data dari Controller
+       
         var dbData = @json($dataPeta);
         var filter = '{{ $filter ?? "banjir" }}';
 
-        // 3. DAFTAR DAERAH
+        // DAFTAR DAERAH
         const daftarDaerah = {
             '61-01': 'Kabupaten Sambas',
             '61-02': 'Kabupaten Bengkayang',
@@ -163,18 +161,15 @@
             return dbData.find(row => row.kabupaten_kota === namaAsli);
         }
 
-        // DEKLARASI GLOBAL: Agar warna peta bisa di-reset saat mouse digeser (Fix Bug Hover)
+        
         var geojsonLayer;
 
-        // --- MENAMBAHKAN INDEX KETERANGAN (LEGENDA) ---
-        var legend = L.control({ position: 'bottomright' });
-
-        // --- MENAMBAHKAN INDEX KETERANGAN (LEGENDA HORIZONTAL) ---
+        // LEGENDA
         var legend = L.control({ position: 'bottomright' });
 
         legend.onAdd = function (map) {
             var div = L.DomUtil.create('div', 'info legend');
-            // Menulis HTML langsung ke dalam kotak legenda
+            
             div.innerHTML = `
                 <div class="legend-title">Keterangan</div>
                 <div class="legend-labels">
@@ -193,7 +188,7 @@
 
         legend.addTo(map);
 
-        // 4. Proses GeoJSON ke Peta
+        
         fetch('/data/kalbar.geojson?v=' + new Date().getTime())
             .then(res => res.json())
             .then(geojson => {
@@ -201,14 +196,14 @@
                 // Masukkan data ke geojsonLayer
                 geojsonLayer = L.geoJSON(geojson, {
                     
-                    // --- A. PENGATURAN WARNA ---
+               
                     style: function(feature) {
                         let item = getDbData(feature);
                         let isFilled = false;
                         let level = 'Kosong';
 
                         if (item) {
-                            // Data dianggap "Terisi" HANYA jika luas genangan / hotspot > 0
+                            
                             if (filter === 'banjir' && item.luas_genangan > 0) {
                                 level = item.potensi_banjir; 
                                 isFilled = true;
@@ -218,20 +213,19 @@
                             }
                         }
 
-                        // SETTINGAN DEFAULT: KETIKA DATA KOSONG (Hanya batas administrasi)
-                        let color = 'transparent';  // Tidak ada warna dalam (Bolong)
-                        let fillOp = 0;             // Transparansi 0%
-                        let colorLine = '#3388ff';  // Warna garis batas biru muda
-                        let weightLine = 1.5;       // Ketebalan garis
+                       
+                        let color = 'transparent';  
+                        let fillOp = 0;            
+                        let colorLine = '#3388ff';  
+                        let weightLine = 1.5;      
 
-                        // JIKA DATA ADA ISINYA (Otomatis terisi warna)
                         if (isFilled) {
-                            if(level === 'Tinggi') color = '#dc3545'; // Merah
-                            else if(level === 'Sedang') color = '#ffc107'; // Kuning
-                            else if(level === 'Rendah') color = '#198754'; // Hijau
+                            if(level === 'Tinggi') color = '#dc3545'; 
+                            else if(level === 'Sedang') color = '#ffc107'; 
+                            else if(level === 'Rendah') color = '#198754'; 
                             
-                            fillOp = 0.7;        // Polygon diwarnai
-                            colorLine = 'white'; // Garis batas jadi putih agar rapi
+                            fillOp = 0.7;        
+                            colorLine = 'white'; 
                         }
 
                         return { 
@@ -242,21 +236,20 @@
                         };
                     },
 
-                    // --- B. PENGATURAN POPUP & HOVER KURSOR ---
-                    // --- B. PENGATURAN POPUP & HOVER KURSOR ---
+                
                     onEachFeature: function(feature, layer) {
                         let item = getDbData(feature);
                         let namaDaerah = daftarDaerah[feature.id] || feature.properties.kabkot;
 
-                        // Membuat UI Popup Header
+                      
                         let isiPopup = "<div class='text-center mb-2'><b class='fs-6 text-primary text-uppercase'>" + namaDaerah + "</b></div>";
                         
                         if (item) {
-                            // Cek apakah sumber data diisi, jika kosong beri teks default
+                           
                             let sumberInfo = item.sumber_data ? item.sumber_data : 'Belum ada referensi';
 
                             if(filter === 'banjir') {
-                                // POPUP DATA BANJIR LENGKAP
+                              
                                 isiPopup += `
                                 <div class='p-2 bg-light rounded border border-primary border-opacity-25' style='min-width: 260px;'>
                                     <div class='d-flex justify-content-between mb-1'><span class='text-muted small'>Tingkat Potensi</span><strong class='text-dark'>${item.potensi_banjir}</strong></div>
@@ -275,7 +268,7 @@
                                     <div class='text-center mt-2 pt-1 border-top'><small class='text-muted' style='font-size:10px;'>Sumber: ${sumberInfo}</small></div>
                                 </div>`;
                             } else {
-                                // POPUP DATA KARHUTLA LENGKAP
+                                
                                 isiPopup += `
                                 <div class='p-2 bg-light rounded border border-danger border-opacity-25' style='min-width: 250px;'>
                                     <div class='d-flex justify-content-between mb-1'><span class='text-muted small'>Tingkat Potensi</span><strong class='text-dark'>${item.potensi_karhutla}</strong></div>
@@ -293,7 +286,7 @@
 
                         layer.bindPopup(isiPopup);
 
-                        // EFEK HOVER (KURSOR)
+                      
                         layer.on({
                             mouseover: function(e) {
                                 var l = e.target;
@@ -304,7 +297,7 @@
                             }
                         });
                     }
-                }).addTo(map); // <-- Langsung masukkan layer ke peta
+                }).addTo(map); 
 
             });
     </script>

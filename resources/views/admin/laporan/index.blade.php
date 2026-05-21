@@ -12,7 +12,7 @@
         :root { --mdmc-blue: #0047ba; --mdmc-light-blue: #1aa4f6; }
         body { font-family: 'Poppins', sans-serif; background-color: #f4f7fa; overflow-x: hidden; }
         
-        /* SIDEBAR FLEXBOX */
+        
         #sidebar {
             width: 280px; min-height: 100vh; background: var(--mdmc-light-blue);
             transition: all 0.3s; position: fixed; z-index: 1000;
@@ -57,7 +57,7 @@
         .profile-toggle-btn .profile-arrow { transition: transform 0.3s ease; }
         .profile-toggle-btn.show .profile-arrow { transform: rotate(180deg); }
 
-        /* CUSTOM CSS TABEL */
+      
         .table-custom th { color: #333; font-weight: 600; padding: 15px; border-bottom: 2px solid #ddd; }
         .table-custom td { vertical-align: middle; padding: 15px; border-bottom: 1px solid #eee; }
         
@@ -73,7 +73,7 @@
             #content { width: 100%; margin-left: 0; }
         }
 
-        /* Efek Hover Tombol Lihat Peta (Kuning Pill) */
+     
         .btn-warning {
             transition: all 0.3s ease-in-out !important;
         }
@@ -206,10 +206,10 @@
                                 <tr>
                                     <td class="ps-4">{{ $index + 1 }}</td>
                                     
-                                    <!-- PERBAIKAN: Tanggal dengan locale ID -->
+                                   
                                     <td class="text-muted small">{{ $laporan->created_at->timezone('Asia/Jakarta')->locale('id')->translatedFormat('d F Y') }}</td>
                                     
-                                    <!-- PERBAIKAN: Update Waktu dengan locale ID -->
+                                   
                                     <td>
                                         <span class="d-block text-dark small">{{ $laporan->updated_at->timezone('Asia/Jakarta')->locale('id')->translatedFormat('d F Y') }},</span>
                                         <span class="d-block text-dark fw-bold small">{{ $laporan->updated_at->timezone('Asia/Jakarta')->translatedFormat('H.i') }} WIB</span>
@@ -217,7 +217,7 @@
                                     
                                     <td class="fw-medium text-dark">{{ $laporan->user->name ?? 'User Tidak Diketahui' }}</td>
                                     
-                                    <!-- PERBAIKAN: Warna Status (Hijau jika Selesai) -->
+                                    
                                     <td>
                                         @if($laporan->status == 'Aktif')
                                             <span class="badge bg-primary px-3 py-2 rounded-pill">Aktif</span>
@@ -259,7 +259,7 @@
 
        <footer class="text-center py-4 mt-auto">
             <small class="text-muted">
-                <i class="far fa-copyright"></i> MDMC KALIMANTAN BARAT 2026 - SOLID BERGERAK MONITOR | DIKELOLA OLEH BIDANG DATA DAN INFORMASI
+                <i class="far fa-copyright"></i> MDMC KALIMANTAN BARAT 2026 - SOLID BERGERAK MONITOR | DIKELOLA OLEH BIDANG TANGGAP DARURAT
             </small>
         </footer>
 
@@ -268,7 +268,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // 1. Logika Sidebar Mobile
+    //  Sidebar Mobile
     const sidebar = document.getElementById('sidebar');
     const sidebarCollapse = document.getElementById('sidebarCollapse');
     const closeSidebar = document.getElementById('closeSidebar');
@@ -278,7 +278,7 @@
     const hideSidebar = () => { sidebar.classList.remove('show'); sidebarOverlay.classList.remove('show'); };
     closeSidebar.addEventListener('click', hideSidebar); sidebarOverlay.addEventListener('click', hideSidebar);
 
-    // 2. Auto-hide Alert
+    // Auto-hide Alert
     document.addEventListener("DOMContentLoaded", function() {
         const alertElement = document.getElementById("success-alert");
         if (alertElement) {
@@ -289,7 +289,7 @@
         }
     });
 
-    // 3. Pencarian Tabel (Real-time)
+    //  Pencarian 
     const searchInput = document.getElementById('searchInput');
     const logTableBody = document.getElementById('logTableBody');
 
