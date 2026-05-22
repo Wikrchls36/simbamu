@@ -244,6 +244,7 @@
                                     <th class="ps-4">Tanggal</th>
                                     <th>Tujuan</th>
                                     <th>Potensi</th>
+                                    <th class="text-center">Jenis Bencana</th>
                                     <th class="text-center">Status</th>
                                     <th class="text-center" width="10%">Aksi</th>
                                 </tr>
@@ -263,6 +264,13 @@
                                             <span class="fw-bold"><span class="dot-indikator dot-waspada"></span> Waspada</span>
                                         @endif
                                     </td>
+                                    
+                                    <td class="text-center">
+                                        <span class="badge bg-secondary px-3 py-2 rounded-pill shadow-sm">
+                                            {{ $log->jenis_bencana }}
+                                        </span>
+                                    </td>
+
                                     <td class="text-center">
                                         @if($log->status_konfirmasi == 'Telah Direspon' || $log->status_konfirmasi == 'Dikonfirmasi')
                                             <span class="badge bg-success px-3 py-2 rounded-pill shadow-sm">Telah Direspon</span>
@@ -280,7 +288,7 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="5" class="text-center text-muted py-4">Belum ada riwayat peringatan yang dikirim.</td>
+                                    <td colspan="6" class="text-center text-muted py-4">Belum ada riwayat peringatan yang dikirim.</td>
                                 </tr>
                                 @endforelse
                             </tbody>
@@ -338,6 +346,24 @@
                         </div>
                     </div>
 
+                    <div class="mb-4">
+                        <p class="fw-bold text-dark mb-2">Jenis Bencana <span class="text-danger"></p>
+                        <div class="d-flex flex-wrap gap-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="jenis_bencana" id="bencanaBanjir" value="Banjir" required>
+                                <label class="form-check-label fw-medium text-dark" for="bencanaBanjir">
+                                    Banjir
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="jenis_bencana" id="bencanaKarhutla" value="Karhutla" required>
+                                <label class="form-check-label fw-medium text-dark" for="bencanaKarhutla">
+                                    Karhutla
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="mb-3">
                         <label class="fw-bold text-dark mb-2">Instruksi</label>
                         <textarea class="form-control rounded-3" name="instruksi" rows="4" placeholder="Tuliskan instruksi untuk daerah terkait..." required></textarea>
@@ -361,13 +387,11 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content rounded-4 border-0 shadow-lg">
             
-        
             <div class="modal-header border-bottom flex-column align-items-start px-4 pt-4 pb-3">
                 <h6 class="fw-bold text-dark mb-2">Detail Peringatan Bencana</h6>
                 <h6 class="fw-bold text-dark m-0">Tujuan : {{ $log->user->asal_daerah ?? $log->user->name }}</h6>
             </div>
 
-            
             <div class="modal-body p-4 text-start">
                 <p class="fw-bold text-dark mb-2">Potensi Peringatan :</p>
                 <div class="d-flex align-items-center mb-4">
@@ -382,9 +406,10 @@
 
                 <p class="fw-bold text-dark mb-2">Detail Informasi</p>
                 <div class="ms-3 mb-3">
-                    
                     <p class="fw-bold text-dark mb-1">Tanggal : {{ $log->created_at->timezone('Asia/Jakarta')->format('d F Y') }}</p>
-                    <p class="fw-bold text-dark mb-3">Waktu : {{ $log->created_at->timezone('Asia/Jakarta')->format('H.i') }} WIB</p>
+                    <p class="fw-bold text-dark mb-1">Waktu : {{ $log->created_at->timezone('Asia/Jakarta')->format('H.i') }} WIB</p>
+                    
+                    <p class="fw-bold text-dark mb-3">Jenis Bencana : <span class="text-primary">{{ $log->jenis_bencana }}</span></p>
 
                     <p class="fw-bold text-dark mb-2">Instruksi</p>
                     <div class="border rounded-3 p-3 bg-white text-dark mb-4" style="min-height: 100px; border-color: #ccc !important;">
@@ -403,7 +428,6 @@
                 </div>
             </div>
 
-            
             <div class="modal-footer border-top-0 px-4 pb-4">
                 <button type="button" class="btn text-white fw-bold px-4 rounded-3" style="background-color: #a5a5a5;" data-bs-dismiss="modal">Tutup</button>
             </div>

@@ -8,11 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Pastikan namanya 'peringatan' sesuai dengan Model kita
+        // Peringatan
         Schema::create('peringatan', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('tingkat_potensi'); 
+            $table->enum('tingkat_potensi', ['Monitoring', 'Siaga', 'Waspada']);
             $table->text('instruksi');
             $table->string('status_konfirmasi')->default('Belum Direspon');
             $table->timestamps();

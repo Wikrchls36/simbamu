@@ -130,6 +130,7 @@
                                     <th class="ps-4">Tanggal</th>
                                     <th>Pengirim</th>
                                     <th>Potensi</th>
+                                    <th class="text-center">Jenis Bencana</th>
                                     <th class="text-center">Status Anda</th>
                                     <th class="text-center" width="10%">Aksi</th>
                                 </tr>
@@ -149,6 +150,13 @@
                                             <span class="fw-bold"><span class="dot-indikator dot-waspada"></span> Waspada</span>
                                         @endif
                                     </td>
+
+                                    <td class="text-center">
+                                        <span class="badge bg-secondary px-3 py-2 rounded-pill shadow-sm">
+                                            {{ $log->jenis_bencana }}
+                                        </span>
+                                    </td>
+
                                     <td class="text-center">
                                         @if($log->status_konfirmasi == 'Telah Direspon' || $log->status_konfirmasi == 'Dikonfirmasi')
                                             <span class="badge bg-success px-3 py-2 rounded-pill shadow-sm">Sudah Direspon</span>
@@ -182,7 +190,6 @@
     </div>
 </div>
 
-
 @foreach($dataPeringatan as $log)
 <div class="modal fade" id="modalDetailPeringatan{{ $log->id }}" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -208,7 +215,9 @@
                 <p class="fw-bold text-dark mb-2">Detail Informasi</p>
                 <div class="ms-3 mb-3">
                     <p class="fw-bold text-dark mb-1">Tanggal : {{ $log->created_at->timezone('Asia/Jakarta')->format('d F Y') }}</p>
-                    <p class="fw-bold text-dark mb-3">Waktu : {{ $log->created_at->timezone('Asia/Jakarta')->format('H.i') }} WIB</p>
+                    <p class="fw-bold text-dark mb-1">Waktu : {{ $log->created_at->timezone('Asia/Jakarta')->format('H.i') }} WIB</p>
+
+                    <p class="fw-bold text-dark mb-3">Jenis Bencana : <span class="text-primary">{{ $log->jenis_bencana }}</span></p>
 
                     <p class="fw-bold text-dark mb-2">Instruksi</p>
                     <div class="border rounded-3 p-3 bg-white text-dark mb-4" style="min-height: 100px; border-color: #ccc !important;">
