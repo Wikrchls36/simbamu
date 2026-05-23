@@ -9,7 +9,7 @@ use App\Models\LaporanUpdate;
 
 class LaporanController extends Controller
 {
-    // 1. Menampilkan Halaman Log Laporan (Semua Daerah)
+    // 1. Menampilkan Halaman Log Laporan 
     public function index()
     {
        
@@ -23,14 +23,14 @@ class LaporanController extends Controller
     public function peta()
     {
         // Ambil hanya laporan yang berstatus 'Aktif'
-        $laporans = Laporan::with('user')->where('status', 'Aktif')->latest()->get();
-        return view('admin.laporan.peta', compact('laporans'));
+        $semuaLaporan = Laporan::with('user')->where('status', 'Aktif')->latest()->get();
+        return view('admin.laporan.peta', compact('semuaLaporan'));
     }
 
-    // 3. Menampilkan Detail SitRep (Fitur Show)
+    // 3. Menampilkan Detail SitRep 
     public function show($id, Request $request)
     {
-        // Cari laporan induk beserta data user dan riwayat updates-nya
+        
         $laporan = Laporan::with(['updates', 'user'])->findOrFail($id);
         
         // Pagination
@@ -54,7 +54,7 @@ class LaporanController extends Controller
         return view('pengguna.laporan.pdf', compact('sitrep'));
     }
 
-    // 5. Fungsi Tombol Konfirmasi "Selesai" 
+    // 5. Fungsi Tombol Konfirmasi 
     public function tandaiSelesai($id)
     {
         $laporan = Laporan::findOrFail($id);

@@ -82,4 +82,3 @@ class PeringatanController extends Controller
         return redirect()->back()->with('success', 'Peringatan berhasil dikirim ke Dashboard dan WhatsApp Daerah!');
     }
 }
-

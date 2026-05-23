@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Detail Laporan - MDMC Daerah</title>
+    <title>Detail Laporan - SIMBAMU</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -37,6 +37,7 @@
         
         .table-doc th { background-color: #f8f9fa; font-size: 13px; color: #555; text-align: center; vertical-align: middle;}
         .table-doc td { font-size: 14px; color: #444; vertical-align: middle;}
+        .td-koordinat { font-size: 12px !important; font-family: monospace; color: #0047ba !important; font-weight: 600;}
     </style>
 </head>
 <body>
@@ -103,16 +104,20 @@
             <p class="fw-bold text-primary mb-2 small"><i class="fas fa-clock me-2"></i>Waktu Kejadian</p>
             <div class="table-responsive mb-4">
                 <table class="table table-bordered table-doc">
-                    <thead><tr><th>Waktu Kejadian</th><th>Kejadian</th><th>Lokasi</th></tr></thead>
+                    <thead><tr><th>Waktu Kejadian</th><th>Kejadian</th><th>Lokasi</th><th width="200">Koordinat Peta</th></tr></thead>
                     <tbody>
                         @php 
                             $wk_waktu = is_string($currentSitrep->wk_waktu ?? null) ? json_decode($currentSitrep->wk_waktu, true) : ($currentSitrep->wk_waktu ?? []);
                             $wk_kejadian = is_string($currentSitrep->wk_kejadian ?? null) ? json_decode($currentSitrep->wk_kejadian, true) : ($currentSitrep->wk_kejadian ?? []);
                             $wk_lokasi = is_string($currentSitrep->wk_lokasi ?? null) ? json_decode($currentSitrep->wk_lokasi, true) : ($currentSitrep->wk_lokasi ?? []);
+                            
+                            
+                            $wk_latitude = is_string($currentSitrep->wk_latitude ?? null) ? json_decode($currentSitrep->wk_latitude, true) : ($currentSitrep->wk_latitude ?? []);
+                            $wk_longitude = is_string($currentSitrep->wk_longitude ?? null) ? json_decode($currentSitrep->wk_longitude, true) : ($currentSitrep->wk_longitude ?? []);
                         @endphp
 
                         @if(empty($wk_waktu) || (count($wk_waktu) == 1 && empty($wk_waktu[0])))
-                            <tr><td colspan="3" class="text-center text-muted">Tidak ada data terinput</td></tr>
+                            <tr><td colspan="4" class="text-center text-muted">Tidak ada data terinput</td></tr>
                         @else
                             @foreach($wk_waktu as $index => $waktu)
                                 @if(!empty($waktu))
@@ -120,6 +125,13 @@
                                     <td class="text-center">{{ $waktu }}</td>
                                     <td>{{ $wk_kejadian[$index] ?? '-' }}</td>
                                     <td>{{ $wk_lokasi[$index] ?? '-' }}</td>
+                                    <td class="text-center td-koordinat">
+                                        @if(!empty($wk_latitude[$index]) && !empty($wk_longitude[$index]))
+                                            {{ $wk_latitude[$index] }}, <br> {{ $wk_longitude[$index] }}
+                                        @else
+                                            <span class="text-muted" style="font-size: 10px; font-family: 'Poppins', sans-serif;">Belum Dipilih</span>
+                                        @endif
+                                    </td>
                                 </tr>
                                 @endif
                             @endforeach
@@ -321,7 +333,6 @@
             @php
                 $lampirans = [];
                 $raw_foto = $currentSitrep->foto_dokumentasi ?? null;
-                
                 
                 if (is_string($raw_foto) && strpos($raw_foto, '[') === 0) {
                     $lampirans = json_decode($raw_foto, true);

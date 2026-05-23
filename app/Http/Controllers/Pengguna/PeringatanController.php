@@ -11,7 +11,7 @@ class PeringatanController extends Controller
 {
     public function index()
     {
-        // Mengambil data peringatan 
+        
         $dataPeringatan = Peringatan::where('user_id', Auth::id())
                             ->orderBy('created_at', 'desc')
                             ->get();

@@ -6,6 +6,9 @@
     <title>Form SITREP MDMC - SIMBAMU</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
         body { background-color: #f4f7fa; font-family: 'Poppins', sans-serif; }
@@ -20,6 +23,7 @@
         .btn-add-row { background-color: #1aa4f6; color: white; border: none; font-weight: bold; }
         .btn-add-row:hover { background-color: #0047ba; color: white; }
         .form-control:focus, .form-select:focus { border-color: #1aa4f6; box-shadow: 0 0 0 0.25rem rgba(26, 164, 246, 0.1); }
+        .input-koordinat { font-size: 0.75rem; padding: 0.25rem; text-align: center; } 
     </style>
 </head>
 <body>
@@ -30,12 +34,10 @@
             <div class="card p-4 p-md-5">
                 
                 <div class="d-flex justify-content-between align-items-start mb-4 border-bottom pb-4">
-                    
                     <div class="text-center flex-grow-1 px-3">
                         <h2 class="fw-bold text-primary mb-1">LAPORAN SITUASI (SITREP)</h2>
                         <h6 class="text-secondary fw-normal">Muhammadiyah Disaster Management Center Wilayah Kalimantan Barat</h6>
                     </div>
-
                     <div style="width: 100px;" class="d-none d-md-block"></div>
                 </div>
 
@@ -56,12 +58,12 @@
                             <input type="date" name="tanggal_sitrep" class="form-control" value="{{ date('Y-m-d') }}" required>
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label text-primary">Latitude</label>
-                            <input type="text" name="latitude" class="form-control bg-light text-muted" value="{{ Auth::user()->latitude ?? '' }}" readonly required>
+                            <label class="form-label text-primary">Lat (Pusat)</label>
+                            <input type="text" name="latitude" id="pusat_lat" class="form-control bg-light text-muted" value="{{ Auth::user()->latitude ?? '' }}" readonly required>
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label text-primary">Longitude</label>
-                            <input type="text" name="longitude" class="form-control bg-light text-muted" value="{{ Auth::user()->longitude ?? '' }}" readonly required>
+                            <label class="form-label text-primary">Lng (Pusat)</label>
+                            <input type="text" name="longitude" id="pusat_lng" class="form-control bg-light text-muted" value="{{ Auth::user()->longitude ?? '' }}" readonly required>
                         </div>
                     </div>
 
@@ -69,13 +71,26 @@
                     <div class="table-responsive mb-4">
                         <table class="table table-bordered align-middle" id="tb_waktu">
                             <thead>
-                                <tr><th>Waktu Kejadian</th><th>Kejadian</th><th>Lokasi</th><th width="50">#</th></tr>
+                                <tr>
+                                    <th>Waktu Kejadian</th>
+                                    <th>Kejadian</th>
+                                    <th>Lokasi</th>
+                                    <th width="200">Koordinat Peta</th>
+                                    <th width="50">#</th>
+                                </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td><input type="text" name="wk_waktu[]" class="form-control" placeholder="Jam/Tgl"></td>
                                     <td><input type="text" name="wk_kejadian[]" class="form-control"></td>
                                     <td><input type="text" name="wk_lokasi[]" class="form-control"></td>
+                                    <td>
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" name="wk_latitude[]" class="form-control input-koordinat" placeholder="Lat" readonly>
+                                            <input type="text" name="wk_longitude[]" class="form-control input-koordinat" placeholder="Lng" readonly>
+                                            <button class="btn btn-outline-primary" type="button" onclick="bukaPeta(this)" title="Pilih di Peta"><i class="fas fa-map-marker-alt"></i></button>
+                                        </div>
+                                    </td>
                                     <td><button type="button" class="btn btn-add-row btn-sm" onclick="addRow('tb_waktu', 'waktu')">+</button></td>
                                 </tr>
                             </tbody>
@@ -228,9 +243,7 @@ Tim MDMC ………….</p>
                     </div>
 
                     <div class="d-flex gap-3 pt-4">
-                        <a href="{{ route('pengguna.laporan.index') }}" class="btn btn-light btn-lg fw-bold rounded-pill shadow-sm border px-5">
-                            Batal
-                        </a>
+                        <a href="{{ route('pengguna.laporan.index') }}" class="btn btn-light btn-lg fw-bold rounded-pill shadow-sm border px-5">Batal</a>
                         <button type="submit" class="btn btn-primary btn-lg fw-bold rounded-pill shadow flex-grow-1">
                             <i class="fas fa-paper-plane me-2"></i> KIRIM LAPORAN SITREP SEKARANG
                         </button>
@@ -241,6 +254,30 @@ Tim MDMC ………….</p>
     </div>
 </div>
 
+<div class="modal fade" id="modalPeta" tabindex="-1" aria-labelledby="modalPetaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-primary" id="modalPetaLabel"><i class="fas fa-map-marked-alt me-2"></i>Pilih Titik Lokasi Bencana</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div id="mapPicker" style="height: 450px; width: 100%;"></div>
+                <div class="p-3 text-center bg-light">
+                    <span class="badge bg-primary fs-6 py-2 px-3 shadow-sm" id="kordinatTerpilih">Klik pada peta untuk menetapkan titik</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light border fw-bold" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-success fw-bold" id="btnSimpanKoordinat"><i class="fas fa-save me-2"></i>Simpan Titik Ini</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <script>
     function addRow(tableId, type) {
         var table = document.getElementById(tableId).getElementsByTagName('tbody')[0];
@@ -248,9 +285,16 @@ Tim MDMC ………….</p>
         var content = '';
 
         if(type === 'waktu') {
-            content = `<td><input type="text" name="wk_waktu[]" class="form-control"></td>
+            content = `<td><input type="text" name="wk_waktu[]" class="form-control" placeholder="Jam/Tgl"></td>
                        <td><input type="text" name="wk_kejadian[]" class="form-control"></td>
-                       <td><input type="text" name="wk_lokasi[]" class="form-control"></td>`;
+                       <td><input type="text" name="wk_lokasi[]" class="form-control"></td>
+                       <td>
+                           <div class="input-group input-group-sm">
+                               <input type="text" name="wk_latitude[]" class="form-control input-koordinat" placeholder="Lat" readonly>
+                               <input type="text" name="wk_longitude[]" class="form-control input-koordinat" placeholder="Lng" readonly>
+                               <button class="btn btn-outline-primary" type="button" onclick="bukaPeta(this)" title="Pilih di Peta"><i class="fas fa-map-marker-alt"></i></button>
+                           </div>
+                       </td>`;
         } else if(type === 'respon') {
             content = `<td><input type="text" name="resp_kluster[]" class="form-control"></td>
                        <td><input type="text" name="resp_lokasi[]" class="form-control"></td>
@@ -278,17 +322,88 @@ Tim MDMC ………….</p>
 </script>
 
 <script>
+    let mapPicker, markerPicker;
+    let inputLatAktif = null, inputLngAktif = null;
+    let tempLat = null, tempLng = null;
+
     
+    const defaultLat = document.getElementById('pusat_lat').value || -0.0263;
+    const defaultLng = document.getElementById('pusat_lng').value || 109.3425;
+
+    function bukaPeta(button) {
+        
+        let divGroup = button.parentElement;
+        inputLatAktif = divGroup.querySelector('input[name="wk_latitude[]"]');
+        inputLngAktif = divGroup.querySelector('input[name="wk_longitude[]"]');
+
+        
+        let modal = new bootstrap.Modal(document.getElementById('modalPeta'));
+        modal.show();
+
+        
+        document.getElementById('modalPeta').addEventListener('shown.bs.modal', function () {
+            if (!mapPicker) {
+                mapPicker = L.map('mapPicker').setView([defaultLat, defaultLng], 12);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; OpenStreetMap'
+                }).addTo(mapPicker);
+
+                
+                mapPicker.on('click', function(e) {
+                    tempLat = e.latlng.lat.toFixed(6);
+                    tempLng = e.latlng.lng.toFixed(6);
+
+                    if (markerPicker) {
+                        markerPicker.setLatLng(e.latlng);
+                    } else {
+                        markerPicker = L.marker(e.latlng).addTo(mapPicker);
+                    }
+                    document.getElementById('kordinatTerpilih').innerText = `Lat: ${tempLat}, Lng: ${tempLng}`;
+                });
+            }
+
+            mapPicker.invalidateSize(); 
+
+            
+            if (inputLatAktif.value && inputLngAktif.value) {
+                let eksisLat = parseFloat(inputLatAktif.value);
+                let eksisLng = parseFloat(inputLngAktif.value);
+                mapPicker.setView([eksisLat, eksisLng], 15);
+                
+                if (markerPicker) markerPicker.setLatLng([eksisLat, eksisLng]);
+                else markerPicker = L.marker([eksisLat, eksisLng]).addTo(mapPicker);
+                
+                document.getElementById('kordinatTerpilih').innerText = `Lat: ${eksisLat}, Lng: ${eksisLng}`;
+                tempLat = eksisLat; tempLng = eksisLng;
+            } else {
+                
+                if(markerPicker) mapPicker.removeLayer(markerPicker);
+                markerPicker = null;
+                document.getElementById('kordinatTerpilih').innerText = 'Klik pada peta untuk menetapkan titik';
+                tempLat = null; tempLng = null;
+                mapPicker.setView([defaultLat, defaultLng], 12);
+            }
+        }, { once: true });
+    }
+
+    
+    document.getElementById('btnSimpanKoordinat').addEventListener('click', function() {
+        if (tempLat && tempLng && inputLatAktif && inputLngAktif) {
+            inputLatAktif.value = tempLat;
+            inputLngAktif.value = tempLng;
+            let modalInstance = bootstrap.Modal.getInstance(document.getElementById('modalPeta'));
+            modalInstance.hide();
+        } else {
+            alert('Harap klik lokasi kejadian pada peta terlebih dahulu!');
+        }
+    });
+</script>
+
+<script>
     document.querySelector('form').addEventListener('submit', function(e) {
         let submitBtn = this.querySelector('button[type="submit"]');
-        
-        
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> SEDANG MENGIRIM...';
-        
-       
         submitBtn.disabled = true;
-        
-       
         let cancelBtn = this.querySelector('.btn-light');
         if(cancelBtn) cancelBtn.style.pointerEvents = 'none';
     });
