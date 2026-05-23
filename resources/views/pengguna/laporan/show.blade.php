@@ -55,7 +55,12 @@
     </div>
 
     <div class="d-flex gap-2 overflow-auto pb-3 mb-2" style="scrollbar-width: thin;">
-        @foreach($laporan->updates as $index => $update)
+        @php
+           
+            $sortedUpdates = $laporan->updates->sortBy('id')->values();
+        @endphp
+        
+        @foreach($sortedUpdates as $index => $update)
             <a href="{{ route('pengguna.laporan.show', ['id' => $laporan->id, 'sitrep' => $update->id]) }}" 
                class="sitrep-tab {{ ($currentSitrep && $currentSitrep->id == $update->id) ? 'active' : '' }}">
                <i class="fas {{ $index == 0 ? 'fa-flag' : 'fa-sync-alt' }} me-2"></i> 

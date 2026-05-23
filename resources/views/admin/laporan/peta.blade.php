@@ -66,13 +66,13 @@
             attribution: '© MDMC Kalbar | SIMBAMU'
         }).addTo(map);
 
-        // Logika Layer Zoom in Zoom Out Untuk Pembeda Layer
+        
         // Layer Utama 
         var layerUtama = L.featureGroup().addTo(map); 
         // Layer Kecil 
         var layerKecil = L.featureGroup(); 
 
-        // Titik Zoom di mana peta otomatis berganti layer dari Utama ke Detail (11 cukup pas untuk level Kabupaten/Kota)
+        
         var zoomThreshold = 11; 
 
         // UI Zoom
@@ -95,8 +95,8 @@
 
         @foreach($semuaLaporan as $item)
             @php 
-                $latest = $item->updates->last(); 
-               
+                
+                $latest = $item->updates->sortBy('id')->last(); 
                 $latPusat = $item->latitude ?? ($item->user->latitude ?? -0.0227);
                 $lngPusat = $item->longitude ?? ($item->user->longitude ?? 109.3425);
             @endphp
@@ -154,7 +154,7 @@
                             </div>
                             
                             <div class="d-flex gap-2 border-top pt-3 mt-3">
-                                <a href="/admin/laporan/{{ $item->id }}/detail" class="btn btn-primary btn-sm fw-bold w-100 d-flex align-items-center justify-content-center shadow-sm text-white" style="border-radius: 8px; padding: 8px;">
+                                <a href="{{ route('admin.laporan.show', $item->id) }}" class="btn btn-primary btn-sm fw-bold w-100 d-flex align-items-center justify-content-center shadow-sm text-white" style="border-radius: 8px; padding: 8px;">
                                     <i class="fas fa-file-pdf me-2"></i> Laporan Lengkap
                                 </a>
                                 <button onclick="map.closePopup()" class="btn btn-light btn-sm border fw-bold w-100 d-flex align-items-center justify-content-center shadow-sm" style="border-radius: 8px; padding: 8px; color: #555;">

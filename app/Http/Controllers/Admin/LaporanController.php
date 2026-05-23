@@ -12,8 +12,7 @@ class LaporanController extends Controller
     // 1. Menampilkan Halaman Log Laporan 
     public function index()
     {
-       
-        // Mengurutkan laporan berdasarkan laporan yang paling baru di-update 
+        
         $laporans = Laporan::with(['user', 'updates'])->orderBy('updated_at', 'desc')->get();
 
         return view('admin.laporan.index', compact('laporans'));
@@ -22,16 +21,21 @@ class LaporanController extends Controller
     // 2. Menampilkan Peta Penyebaran Laporan Bencana
     public function peta()
     {
-        // Ambil hanya laporan yang berstatus 'Aktif'
-        $semuaLaporan = Laporan::with('user')->where('status', 'Aktif')->latest()->get();
+        
+        $semuaLaporan = Laporan::with(['user', 'updates' => function($query) {
+            $query->orderBy('id', 'asc');
+        }])->where('status', 'Aktif')->get();
+        
         return view('admin.laporan.peta', compact('semuaLaporan'));
     }
 
     // 3. Menampilkan Detail SitRep 
     public function show($id, Request $request)
     {
-        
-        $laporan = Laporan::with(['updates', 'user'])->findOrFail($id);
+       
+        $laporan = Laporan::with(['user', 'updates' => function($query) {
+            $query->orderBy('id', 'asc');
+        }])->findOrFail($id);
         
         // Pagination
         $sitrepId = $request->query('sitrep');
@@ -44,13 +48,13 @@ class LaporanController extends Controller
         return view('admin.laporan.show', compact('laporan', 'currentSitrep'));
     }
 
-    // 4. Download PDF untuk Wilayah
+    // 4. DOWNLOAD PDF
     public function downloadPdf($update_id)
     {
-        // Ambil data SitRep
+        
         $sitrep = LaporanUpdate::with('laporan.user')->findOrFail($update_id);
         
-        // Arahkan ke view PDF 
+       
         return view('pengguna.laporan.pdf', compact('sitrep'));
     }
 

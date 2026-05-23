@@ -21,12 +21,9 @@
         .btn-back-floating { position: absolute; top: 90px; left: 20px; width: 45px; height: 45px; background-color: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #333; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 1000; transition: all 0.3s ease; font-size: 1.1rem; border: 2px solid transparent;}
         .btn-back-floating:hover { background-color: #f8f9fa; color: #0047ba; transform: scale(1.05); border-color: #0047ba;}
 
-        
         .custom-marker { background: #0d6efd; color: white; border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border: 3px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.3); font-size: 20px; transition: transform 0.2s;}
         .custom-marker:hover { transform: scale(1.15); }
         .custom-marker.karhutla { background: #dc3545; }
-
-      
         .custom-marker-kecil { width: 28px; height: 28px; font-size: 12px; border-width: 2px; }
 
         
@@ -66,13 +63,13 @@
             attribution: '© MDMC Kalbar | SIMBAMU'
         }).addTo(map);
 
-        // Logika Layer Zoom in Zoom Out Untuk Pembeda Titik Pusat dan Titik Detail
+        
         // Layer Utama 
         var layerUtama = L.featureGroup().addTo(map); 
         // Layer Kecil 
         var layerKecil = L.featureGroup(); 
 
-        // Titik Zoom di mana peta otomatis berganti layer dari Utama ke Detail (11 cukup pas untuk level Kabupaten/Kota)
+        
         var zoomThreshold = 11; 
 
         // UI Zoom
@@ -95,7 +92,8 @@
 
         @foreach($semuaLaporan as $item)
             @php 
-                $latest = $item->updates->last(); 
+                
+                $latest = $item->updates->sortBy('id')->last(); 
                
                 $latPusat = $item->latitude ?? ($item->user->latitude ?? -0.0227);
                 $lngPusat = $item->longitude ?? ($item->user->longitude ?? 109.3425);

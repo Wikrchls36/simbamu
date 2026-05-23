@@ -21,10 +21,14 @@ class LaporanController extends Controller
         return view('pengguna.laporan.index', compact('logLaporan'));
     }
 
-    // Untuk menampilkan simbol di peta
+    // MARKUP
     public function peta()
     {
-        $semuaLaporan = Laporan::with('user')->where('status', 'Aktif')->get();
+        
+        $semuaLaporan = Laporan::with(['user', 'updates' => function($query) {
+            $query->orderBy('id', 'asc');
+        }])->where('status', 'Aktif')->get();
+
         return view('pengguna.laporan.peta', compact('semuaLaporan'));
     }
 
@@ -34,7 +38,7 @@ class LaporanController extends Controller
         return view('pengguna.laporan.create');
     }
 
-    // Memproses data dari form dan menyimpan ke database 
+    
     public function store(Request $request)
     {
         $laporan = Laporan::create([
@@ -49,7 +53,7 @@ class LaporanController extends Controller
         $fotoPath = null;
         if ($request->hasFile('foto_dokumentasi')) {
             $path_fotos = [];
-            // Lakukan looping untuk setiap foto yang diunggah
+            
             foreach ($request->file('foto_dokumentasi') as $foto) {
                 $path_fotos[] = $foto->store('sitrep_lampiran', 'public');
             }
@@ -105,27 +109,36 @@ class LaporanController extends Controller
         return redirect()->route('pengguna.laporan.index')->with('success', 'SitRep #1 berhasil dikirim dan Peta telah diperbarui!');
     }
 
+     
     // Menampilkan halaman Detail Laporan dengan Pagination 
     public function show($id, Request $request)
     {
-        $laporan = Laporan::with('updates')->findOrFail($id);
+       
+        $laporan = Laporan::with(['updates' => function($query) {
+            $query->orderBy('id', 'asc'); 
+        }])->findOrFail($id);
         
         $sitrepId = $request->query('sitrep');
+        
         if ($sitrepId) {
+            
             $currentSitrep = $laporan->updates->where('id', $sitrepId)->first();
         } else {
+           
             $currentSitrep = $laporan->updates->first(); 
+            
+            
         }
 
         return view('pengguna.laporan.show', compact('laporan', 'currentSitrep'));
     }
 
-    // Mendownload PDF
+    // DOWNLOAD PDF
     public function downloadPdf($update_id)
     {
         $sitrep = \App\Models\LaporanUpdate::with('laporan')->findOrFail($update_id);
         
-        // Agar pengguna lain tidak bisa mengunduh laporan dari pengguna lain
+       
         if ($sitrep->laporan->user_id != \Auth::id()) {
             abort(403, 'Akses Ditolak: Anda tidak memiliki izin untuk mengunduh laporan daerah lain.');
         }
@@ -136,8 +149,10 @@ class LaporanController extends Controller
     // Menampilkan halaman form update laporan
     public function createUpdate($id)
     {
-        $laporan = Laporan::with('updates')->findOrFail($id);
-        $latestSitrep = $laporan->updates->last(); 
+        $laporan = Laporan::findOrFail($id);
+        
+        
+        $latestSitrep = LaporanUpdate::where('laporan_id', $id)->orderBy('id', 'desc')->first(); 
         
         return view('pengguna.laporan.update_create', compact('laporan', 'latestSitrep'));
     }
@@ -147,19 +162,42 @@ class LaporanController extends Controller
     {
         $laporan = Laporan::findOrFail($id);
         
-        $latestSitrep = $laporan->updates->last();
-        $fotoPath = $latestSitrep ? $latestSitrep->foto_dokumentasi : null;
-
-        // Untuk mengupload lebih dari 1 foto
-        if ($request->hasFile('foto_dokumentasi')) {
-            $path_fotos = [];
-            foreach ($request->file('foto_dokumentasi') as $foto) {
-                $path_fotos[] = $foto->store('dokumentasi_sitrep', 'public');
+        
+        $latestSitrep = LaporanUpdate::where('laporan_id', $id)->orderBy('id', 'desc')->first();
+        
+        
+        $fotoLama = [];
+        if ($latestSitrep && $latestSitrep->foto_dokumentasi) {
+            $rawFoto = $latestSitrep->foto_dokumentasi;
+            if (is_string($rawFoto) && strpos($rawFoto, '[') === 0) {
+                $fotoLama = json_decode($rawFoto, true) ?? [];
+            } elseif (is_string($rawFoto) && !empty($rawFoto)) {
+                $fotoLama = [$rawFoto];
+            } elseif (is_array($rawFoto)) {
+                $fotoLama = $rawFoto;
             }
-            $fotoPath = json_encode($path_fotos);
         }
 
+        
+        $fotoPath = $latestSitrep ? $latestSitrep->foto_dokumentasi : null;
+
+      
+        if ($request->hasFile('foto_dokumentasi')) {
+            $fotoBaru = [];
+            foreach ($request->file('foto_dokumentasi') as $foto) {
+                $fotoBaru[] = $foto->store('sitrep_lampiran', 'public');
+            }
+            
+            
+            $kumpulanFoto = array_merge($fotoLama, $fotoBaru);
+            $fotoPath = json_encode($kumpulanFoto);
+        }
+
+      
+        $updateKe = $latestSitrep ? ($latestSitrep->update_ke + 1) : 2;
+
         $laporan->updates()->create([
+            'update_ke' => $updateKe, 
             'tanggal_sitrep' => $request->tanggal_sitrep,
             'wk_waktu' => json_encode($request->wk_waktu ?? []),
             'wk_kejadian' => json_encode($request->wk_kejadian ?? []),
@@ -199,7 +237,7 @@ class LaporanController extends Controller
             'penutup_lokasi' => $request->penutup_lokasi,
             'penutup_tanggal' => date('Y-m-d'), 
             'penutup_nama_tim' => $request->penutup_nama_tim,
-            'foto_dokumentasi' => $fotoPath,
+            'foto_dokumentasi' => $fotoPath, 
         ]);
 
         $laporan->touch(); 

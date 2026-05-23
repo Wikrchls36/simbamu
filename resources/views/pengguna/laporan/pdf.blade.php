@@ -30,21 +30,12 @@
         .foto-item { display: inline-block; width: 45%; margin: 10px; vertical-align: top; }
         .foto-item img { max-width: 100%; max-height: 250px; border: 1px solid #000; padding: 2px; }
 
-    
-
         /*FUNGSI PRINT*/
-
         @media print {
             body { background-color: #fff; padding: 0; display: block; }
             #document-wrapper { width: 100%; max-width: 100%; padding: 0; box-shadow: none; }
-            
-          
             thead { display: table-header-group; }
-            
-            
             tr, .blok-aman, .foto-item { page-break-inside: avoid; break-inside: avoid; }
-            
-            
             @page { size: A4 portrait; margin: 15mm; }
         }
     </style>
@@ -84,7 +75,7 @@
                                 </div>
                             </div>
 
-                            <span class="info-label" style="color: #0047ba; margin-top: 10px;">Waktu Kejadian & Lokasi Sebaran</span>
+                            <span class="info-label" style="color: #0047ba; margin-top: 10px;">Waktu Kejadian</span>
                             <table class="data-table">
                                 <thead><tr><th width="20%">Waktu</th><th>Kejadian</th><th>Lokasi</th><th width="22%">Koordinat</th></tr></thead>
                                 <tbody>
@@ -110,7 +101,7 @@
                         </div>
 
                         <div class="blok-aman" style="margin-top: 15px;">
-                            <span class="info-label" style="color: #0047ba;">Dampak Korban</span>
+                            <span class="info-label" style="color: #0047ba;">Dampak</span>
                             <table class="data-table">
                                 <tr><th>Meninggal</th><th>Luka-luka</th><th>Hilang</th><th>Pengungsi</th><th>Terdampak</th></tr>
                                 <tr>
@@ -122,7 +113,7 @@
                                 </tr>
                             </table>
                             <div class="content-text" style="margin-top: 8px;">
-                                <span class="info-label">Detail Kerusakan Material:</span>
+                                <span class="info-label">Dampak Material</span>
                                 {!! nl2br(e($sitrep->dampak_material ?? 'Tidak ada laporan kerusakan material.')) !!}
                             </div>
                         </div>
@@ -176,8 +167,7 @@
                         </div>
 
                         <div class="blok-aman">
-                            <div class="section-title">F. TIM RESPON & KEBUTUHAN</div>
-                            <span class="info-label" style="color: #0047ba;">Personil Lapangan</span>
+                            <div class="section-title">F. TIM RESPON</div>
                             <table class="data-table">
                                 <thead><tr><th>Kluster Tim</th><th>Total</th><th>Pulang</th><th>Bertugas</th></tr></thead>
                                 <tbody>
@@ -193,8 +183,10 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                        </div>
 
-                            <span class="info-label" style="color: #0047ba; margin-top: 15px;">Kebutuhan Mendesak</span>
+                        <div class="blok-aman">
+                            <div class="section-title">G. KEBUTUHAN</div>
                             <table class="data-table">
                                 <thead><tr><th>Item Kebutuhan</th><th>Jumlah / Satuan</th></tr></thead>
                                 <tbody>
@@ -212,7 +204,14 @@
                         </div>
 
                         <div class="blok-aman">
-                            <div class="section-title">G. CONTACT PERSON & REKENING</div>
+                            <div class="section-title">H. SUMBER INFORMASI</div>
+                            <div class="content-text">
+                                {!! nl2br(e($sitrep->sumber_informasi ?? '-')) !!}
+                            </div>
+                        </div>
+
+                        <div class="blok-aman">
+                            <div class="section-title">I. CONTACT PERSON</div>
                             <table class="data-table">
                                 <thead><tr><th>Nama Petugas</th><th>No. Telepon / HP</th></tr></thead>
                                 <tbody>
@@ -227,14 +226,17 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                            <div class="content-text" style="margin-top: 8px;">
-                                <strong>Rekening Donasi:</strong><br>
+                        </div>
+
+                        <div class="blok-aman">
+                            <div class="section-title">J. REKENING PENGGALANGAN DANA</div>
+                            <div class="content-text">
                                 {!! nl2br(e($sitrep->rekening_donasi ?? '-')) !!}
                             </div>
                         </div>
 
                         <div class="blok-aman">
-                            <div class="section-title">H. PENUTUP</div>
+                            <div class="section-title">K. PENUTUP</div>
                             <div class="content-text">Demikian laporan ini kami buat sebagai sumber informasi dan diharapkan dapat menjadi pertimbangan dalam pengambilan keputusan.</div>
                             
                             <div style="margin-top: 30px; text-align: right; padding-right: 20px;">
@@ -253,7 +255,7 @@
 
                         @if(!empty($daftar_foto) && is_array($daftar_foto))
                         <div class="blok-aman">
-                            <div class="section-title">I. LAMPIRAN DOKUMENTASI</div>
+                            <div class="section-title">L. LAMPIRAN DOKUMENTASI</div>
                             <div class="foto-grid">
                                 @foreach($daftar_foto as $foto_path)
                                     @php

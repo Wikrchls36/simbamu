@@ -54,7 +54,12 @@
     </div>
 
     <div class="d-flex gap-2 overflow-auto pb-3 mb-2" style="scrollbar-width: thin;">
-        @foreach($laporan->updates as $index => $update)
+        @php
+            // TAKTIK JITU: Paksa urutkan data dari ID terkecil ke terbesar, lalu reset index
+            $sortedUpdates = $laporan->updates->sortBy('id')->values();
+        @endphp
+        
+        @foreach($sortedUpdates as $index => $update)
             <a href="{{ route('admin.laporan.show', ['id' => $laporan->id, 'sitrep' => $update->id]) }}" 
                class="sitrep-tab {{ ($currentSitrep && $currentSitrep->id == $update->id) ? 'active' : '' }}">
                <i class="fas {{ $index == 0 ? 'fa-flag' : 'fa-sync-alt' }} me-2"></i> 
@@ -359,4 +364,4 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html> 
+</html>

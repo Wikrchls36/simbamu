@@ -87,7 +87,6 @@ Route::middleware('auth')->group(function () {
 
     // Rute Peta 
     Route::get('/laporan/peta', [PenggunaLaporan::class, 'peta'])->name('pengguna.laporan.peta');
-
     Route::get('/laporan/{id}/update', [App\Http\Controllers\Pengguna\LaporanController::class, 'createUpdate'])->name('pengguna.laporan.update_create');
     Route::post('/laporan/{id}/update', [App\Http\Controllers\Pengguna\LaporanController::class, 'storeUpdate'])->name('pengguna.laporan.update_store');
 
