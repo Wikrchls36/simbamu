@@ -64,6 +64,8 @@ class LaporanController extends Controller
             'wk_waktu' => json_encode($request->wk_waktu ?? []),
             'wk_kejadian' => json_encode($request->wk_kejadian ?? []),
             'wk_lokasi' => json_encode($request->wk_lokasi ?? []),
+            'wk_latitude' => json_encode($request->wk_latitude ?? []),
+            'wk_longitude' => json_encode($request->wk_longitude ?? []),
             'dampak_meninggal' => $request->dampak_meninggal ?? 0,
             'dampak_luka' => $request->dampak_luka ?? 0,
             'dampak_hilang' => $request->dampak_hilang ?? 0,
@@ -159,10 +161,11 @@ class LaporanController extends Controller
 
         $laporan->updates()->create([
             'tanggal_sitrep' => $request->tanggal_sitrep,
-
             'wk_waktu' => json_encode($request->wk_waktu ?? []),
             'wk_kejadian' => json_encode($request->wk_kejadian ?? []),
             'wk_lokasi' => json_encode($request->wk_lokasi ?? []),
+            'wk_latitude' => json_encode($request->wk_latitude ?? []),
+            'wk_longitude' => json_encode($request->wk_longitude ?? []),
             'dampak_meninggal' => $request->dampak_meninggal ?? 0,
             'dampak_luka' => $request->dampak_luka ?? 0,
             'dampak_hilang' => $request->dampak_hilang ?? 0,

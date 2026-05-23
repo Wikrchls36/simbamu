@@ -17,6 +17,8 @@ class LaporanUpdate extends Model
         'wk_waktu' => 'array',
         'wk_kejadian' => 'array',
         'wk_lokasi' => 'array',
+        'wk_latitude' => 'array',
+        'wk_longitude' => 'array',
         'resp_kluster' => 'array',
         'resp_lokasi' => 'array',
         'resp_keterangan' => 'array',

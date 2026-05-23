@@ -23,11 +23,11 @@ class LaporanController extends Controller
     public function peta()
     {
         // Ambil hanya laporan yang berstatus 'Aktif'
-        $laporans = Laporan::with('user')->where('status', 'Aktif')->latest()->get();
-        return view('admin.laporan.peta', compact('laporans'));
+        $semuaLaporan = Laporan::with('user')->where('status', 'Aktif')->latest()->get();
+        return view('admin.laporan.peta', compact('semuaLaporan'));
     }
 
-    // 3. Menampilkan Detail SitRep (Fitur Show)
+    // 3. Menampilkan Detail SitRep 
     public function show($id, Request $request)
     {
         // Cari laporan induk beserta data user dan riwayat updates-nya
