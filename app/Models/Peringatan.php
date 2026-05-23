@@ -15,8 +15,10 @@ class Peringatan extends Model
     protected $fillable = [
         'user_id',
         'tingkat_potensi',
+        'jenis_bencana',
         'instruksi',
         'status_konfirmasi',
+
     ];
 
     

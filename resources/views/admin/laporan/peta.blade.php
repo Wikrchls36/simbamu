@@ -66,7 +66,7 @@
             attribution: '© MDMC Kalbar | SIMBAMU'
         }).addTo(map);
 
-        // Logika Layer Zoom in Zoom Out Untuk Pembeda Titik Pusat dan Titik Detail
+        // Logika Layer Zoom in Zoom Out Untuk Pembeda Layer
         // Layer Utama 
         var layerUtama = L.featureGroup().addTo(map); 
         // Layer Kecil 

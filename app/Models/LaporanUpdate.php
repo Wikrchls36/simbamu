@@ -9,7 +9,7 @@ class LaporanUpdate extends Model
 {
     use HasFactory;
 
-    // Mengizinkan semua kolom diisi
+    
     protected $guarded = [];
 
     

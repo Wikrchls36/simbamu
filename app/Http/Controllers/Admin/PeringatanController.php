@@ -19,10 +19,11 @@ class PeringatanController extends Controller
 
     public function store(Request $request)
     {
-        // 1. Validasi Input
+        // 1. Input
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'tingkat_potensi' => 'required|in:Monitoring,Siaga,Waspada',
+            'jenis_bencana' => 'required|in:Banjir,Karhutla',  
             'instruksi' => 'required|string',
         ]);
 
@@ -30,6 +31,7 @@ class PeringatanController extends Controller
         Peringatan::create([
             'user_id' => $request->user_id,
             'tingkat_potensi' => $request->tingkat_potensi,
+            'jenis_bencana' => $request->jenis_bencana,
             'instruksi' => $request->instruksi,
             'status_konfirmasi' => 'Belum Direspon',
         ]);
@@ -45,6 +47,7 @@ class PeringatanController extends Controller
             $pesanWa .= "Halo *{$penerima->name}*,\n";
             $pesanWa .= "Terdapat informasi peringatan dini untuk daerah Anda.\n\n";
             $pesanWa .= "🚨 *Status :* {$request->tingkat_potensi}\n";
+            $pesanWa .= "⚠️ *Jenis Bencana :* {$request->jenis_bencana}\n";
             $pesanWa .= "📋 *Instruksi:*\n{$request->instruksi}\n\n";
             $pesanWa .= "Mohon segera cek dashboard SIMBAMU untuk melakukan konfirmasi.\n";
             $pesanWa .= "_Pesan ini dikirim otomatis oleh sistem SIMBAMU MDMC Wilayah Kalbar._";
@@ -79,4 +82,3 @@ class PeringatanController extends Controller
         return redirect()->back()->with('success', 'Peringatan berhasil dikirim ke Dashboard dan WhatsApp Daerah!');
     }
 }
-

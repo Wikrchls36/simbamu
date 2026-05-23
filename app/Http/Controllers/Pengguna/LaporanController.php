@@ -142,7 +142,7 @@ class LaporanController extends Controller
         return view('pengguna.laporan.update_create', compact('laporan', 'latestSitrep'));
     }
 
-    // Memproses data dari Form Update laporan
+    
     public function storeUpdate(Request $request, $id)
     {
         $laporan = Laporan::findOrFail($id);

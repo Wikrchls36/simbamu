@@ -47,7 +47,7 @@
         }
         #sidebarOverlay.show { display: block; }
 
-        /* MAIN CONTENT & NAVBAR */
+        
         #content { width: calc(100% - 280px); margin-left: 280px; transition: all 0.3s; min-height: 100vh; display: flex; flex-direction: column; }
         #content.active { width: 100%; margin-left: 0; }
         .navbar { height: 70px; }
@@ -66,7 +66,7 @@
             border-color: #dee2e6 !important;
         }
 
-        /* Responsive Mobile */
+        
         @media (max-width: 992px) {
             #sidebar { margin-left: -280px; }
             #sidebar.show { margin-left: 0; }

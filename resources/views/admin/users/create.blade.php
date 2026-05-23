@@ -60,7 +60,7 @@
 
         <div class="mb-4">
             <label class="form-label">Nomor WhatsApp</label>
-           <input type="text" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" name="no_whatsapp" class="form-control" placeholder="Isikan nomor WhatsApp (Contoh: 0812...)" value="{{ old('no_whatsapp') }}" required>
+           <input type="text" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" name="no_whatsapp" class="form-control" placeholder="Isikan nomor WhatsApp (Contoh: 62812...)" value="{{ old('no_whatsapp') }}" required>
         </div>
 
         <div class="mb-4">
