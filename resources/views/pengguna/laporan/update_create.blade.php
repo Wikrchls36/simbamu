@@ -84,8 +84,6 @@
                                     $wk_waktu = is_string($latestSitrep->wk_waktu ?? null) ? json_decode($latestSitrep->wk_waktu, true) : ($latestSitrep->wk_waktu ?? []);
                                     $wk_kejadian = is_string($latestSitrep->wk_kejadian ?? null) ? json_decode($latestSitrep->wk_kejadian, true) : ($latestSitrep->wk_kejadian ?? []);
                                     $wk_lokasi = is_string($latestSitrep->wk_lokasi ?? null) ? json_decode($latestSitrep->wk_lokasi, true) : ($latestSitrep->wk_lokasi ?? []);
-                                    
-                                    // Tarik data array koordinat
                                     $wk_latitude = is_string($latestSitrep->wk_latitude ?? null) ? json_decode($latestSitrep->wk_latitude, true) : ($latestSitrep->wk_latitude ?? []);
                                     $wk_longitude = is_string($latestSitrep->wk_longitude ?? null) ? json_decode($latestSitrep->wk_longitude, true) : ($latestSitrep->wk_longitude ?? []);
                                 @endphp
