@@ -10,7 +10,6 @@
         :root { --mdmc-blue: #0047ba; --mdmc-light-blue: #1aa4f6; }
         body { font-family: 'Poppins', sans-serif; background-color: #f4f7fa; overflow-x: hidden; }
         
-        /* SIDEBAR FLEXBOX */
         #sidebar {
             width: 280px; min-height: 100vh; background: var(--mdmc-light-blue);
             transition: all 0.3s; position: fixed; z-index: 1000;
@@ -37,25 +36,21 @@
 
         .nav-link:hover { color: var(--mdmc-blue) !important; background: white; }
         
-        /* OVERLAY UNTUK MOBILE */
         #sidebarOverlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(0,0,0,0.5); z-index: 999; display: none;
         }
         #sidebarOverlay.show { display: block; }
 
-        /* Main Content */
         #content { width: calc(100% - 280px); margin-left: 280px; transition: all 0.3s; min-height: 100vh; display: flex; flex-direction: column;}
         #content.active { width: 100%; margin-left: 0; }
         .navbar { height: 70px; }
         .profile-img { width: 40px; height: 40px; border-radius: 50%; border: 1px solid #ddd; padding: 2px; }
 
-        /* Cards */
         .card-stat { border: none; border-radius: 15px; color: white; transition: transform 0.3s; }
         .card-stat:hover { transform: translateY(-5px); }
         .bg-gradient-cyan { background: linear-gradient(45deg, #0088cc, #00bbff); }
 
-        /* Responsive Mobile */
         @media (max-width: 992px) {
             #sidebar { margin-left: -280px; }
             #sidebar.show { margin-left: 0; }

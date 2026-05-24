@@ -10,11 +10,11 @@
         :root { --mdmc-blue: #0047ba; --mdmc-light-blue: #1aa4f6; }
         body { font-family: 'Poppins', sans-serif; background-color: #f4f7fa; overflow-x: hidden; }
         
-        /* 1. PERBAIKAN SIDEBAR FLEXBOX */
+        
         #sidebar {
             width: 280px; min-height: 100vh; background: var(--mdmc-light-blue);
             transition: all 0.3s; position: fixed; z-index: 1000;
-            display: flex; flex-direction: column; /* Membuat sidebar jadi kolom flex */
+            display: flex; flex-direction: column; 
         }
         #sidebar.active { margin-left: -280px; }
 
@@ -23,12 +23,12 @@
             background: #fff; border-bottom: 1px solid #eee; position: relative;
         }
 
-        /* Navigasi menyebar sampai bawah */
+        
         .nav {
-            flex-grow: 1; /* Mengisi sisa ruang kosong */
+            flex-grow: 1; 
             display: flex; flex-direction: column;
-            justify-content: space-evenly; /* Menyebar merata atas ke bawah */
-            padding: 20px 0 40px 0; /* Ruang atas dan bawah */
+            justify-content: space-evenly; 
+            padding: 20px 0 40px 0; 
         }
 
         .nav-item { padding: 0 15px; }
@@ -40,42 +40,42 @@
 
         .nav-link:hover { color: var(--mdmc-blue) !important; background: white; }
         
-        /* 2. OVERLAY UNTUK MOBILE */
+        
         #sidebarOverlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(0,0,0,0.5); z-index: 999; display: none;
         }
         #sidebarOverlay.show { display: block; }
 
-        /* Main Content */
+       
         #content { width: calc(100% - 280px); margin-left: 280px; transition: all 0.3s; min-height: 100vh; }
         #content.active { width: 100%; margin-left: 0; }
         .navbar { height: 70px; }
         .profile-img { width: 40px; height: 40px; border-radius: 50%; border: 1px solid #ddd; padding: 2px; }
 
-        /* Cards */
+       
         .card-stat { border: none; border-radius: 15px; color: white; transition: transform 0.3s; }
         .card-stat:hover { transform: translateY(-5px); }
         .bg-gradient-blue { background: linear-gradient(45deg, #000080, #0000ff); }
         .bg-gradient-cyan { background: linear-gradient(45deg, #0088cc, #00bbff); }
 
-        /* Responsive Mobile */
+        
         @media (max-width: 992px) {
             #sidebar { margin-left: -280px; }
             #sidebar.show { margin-left: 0; }
             #content { width: 100%; margin-left: 0; }
         }
-        /* Menghilangkan panah ganda bawaan dropdown bootstrap */
+        
         .profile-toggle-btn::after {
             display: none !important;
         }
 
-        /* Mengatur transisi animasi panah */
+        
         .profile-toggle-btn .profile-arrow {
             transition: transform 0.3s ease;
         }
 
-        /* Saat dropdown terbuka (bootstrap otomatis menambahkan class 'show'), putar panahnya */
+       
         .profile-toggle-btn.show .profile-arrow {
             transform: rotate(180deg);
         }
@@ -198,13 +198,13 @@
     const closeSidebar = document.getElementById('closeSidebar');
     const sidebarOverlay = document.getElementById('sidebarOverlay');
 
-    // Fungsi Membuka Sidebar
+    
     sidebarCollapse.addEventListener('click', () => {
         sidebar.classList.add('show');
         sidebarOverlay.classList.add('show');
     });
 
-    // Fungsi Menutup Sidebar (Bisa klik tombol X atau area hitam)
+   
     const hideSidebar = () => {
         sidebar.classList.remove('show');
         sidebarOverlay.classList.remove('show');

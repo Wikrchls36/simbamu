@@ -130,7 +130,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    // Fitur Intip Password
+    
     function toggleVisibility(inputId, iconElement) {
         const input = document.getElementById(inputId);
         if (input.type === "password") {
