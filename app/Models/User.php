@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Laporan; 
 
 #[Fillable(['name', 'email', 'password', 'profile_photo', 'regency', 'no_whatsapp', 'latitude', 'longitude'])]
 #[Hidden(['password'])]
@@ -27,5 +28,13 @@ class User extends Authenticatable
         return [
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Relasi ke model Laporan
+     */
+    public function laporans() 
+    {
+        return $this->hasMany(Laporan::class, 'user_id', 'id');
     }
 }

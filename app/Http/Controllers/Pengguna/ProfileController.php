@@ -65,7 +65,7 @@ class ProfileController extends Controller
 
         if ($isUpdated) {
             $user->save();
-            return redirect()->back()->with('success', 'Profil berhasil diperbarui!');
+            return redirect()->back()->with('success', 'Profil daerah berhasil diperbarui!');
         }
 
         return redirect()->back()->with('info', 'Tidak ada perubahan data yang disimpan.');

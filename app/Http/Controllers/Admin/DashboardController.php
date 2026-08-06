@@ -7,36 +7,60 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Laporan; 
+use Carbon\Carbon; 
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
 
-        // 1. Jika yang login adalah MDMC Daerah
-        if ($user->role === 'daerah') {
-            
-            //  Hitung laporan milik daerah 
-            $jumlahLaporan = Laporan::where('user_id', $user->id)->count();
-            
-            // Kirim variabel jumlahLaporan ke file blade daerah
-            return view('pengguna.dashboard', compact('user', 'jumlahLaporan')); 
+        if ($user->role !== 'admin') {
+            return abort(403, 'Anda tidak memiliki akses ke halaman ini.');
         }
 
-        // 2. Jika yang login adalah MDMC Wilayah (Admin)
-        if ($user->role === 'admin') {
-            
-            // Menghitung jumlah pengguna 'daerah'
-            $jumlahPengguna = User::where('role', 'daerah')->count();
-            
-            // Menghitung jumlah laporan dari seluruh daerah di database
-            $jumlahLaporan = Laporan::count(); 
-            
-            return view('admin.dashboard', compact('user', 'jumlahPengguna', 'jumlahLaporan')); 
-        }
+        $filterTahun = $request->query('tahun', date('Y'));
+        $filterBulan = $request->query('bulan', 'all');
         
-        // Default jika role tidak dikenali
-        return abort(403, 'Anda tidak memiliki akses.');
+        $queryLaporan = Laporan::query();
+        $queryLaporan->whereYear('created_at', $filterTahun);
+
+        if ($filterBulan !== 'all') {
+            $queryLaporan->whereMonth('created_at', $filterBulan);
+        }
+
+        $jumlahPengguna = User::where('role', 'daerah')->count();
+        $jumlahLaporan = (clone $queryLaporan)->count(); 
+
+        $labelBencana = ['Banjir', 'Karhutla'];
+        $dataBencana = [
+            (clone $queryLaporan)->where('jenis_bencana', 'Banjir')->count(),
+            (clone $queryLaporan)->where('jenis_bencana', 'Karhutla')->count()
+        ];
+
+        $labelStatus = ['Aktif', 'Selesai'];
+        $dataStatus = [
+            (clone $queryLaporan)->where('status', 'Aktif')->count(),
+            (clone $queryLaporan)->where('status', 'Selesai')->count()
+        ];
+        
+        $topDaerah = User::where('role', 'daerah')
+            ->withCount(['laporans' => function ($query) use ($filterTahun, $filterBulan) {
+                $query->whereYear('created_at', $filterTahun);
+                      
+                if ($filterBulan !== 'all') {
+                    $query->whereMonth('created_at', $filterBulan);
+                }
+            }])
+            ->orderByDesc('laporans_count')
+            ->take(3)
+            ->get();
+        
+        return view('admin.dashboard', compact(
+            'user', 'jumlahPengguna', 'jumlahLaporan', 
+            'labelBencana', 'dataBencana', 
+            'labelStatus', 'dataStatus',
+            'topDaerah', 'filterTahun', 'filterBulan' 
+        )); 
     }
 }

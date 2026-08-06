@@ -4,16 +4,17 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProfileController;
-use App\Http\Controllers\Admin\PetaController;
-use App\Http\Controllers\Admin\PeringatanController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\RekapitulasiController;
 use App\Http\Controllers\Pengguna\DashboardController as PenggunaDashboard;
-use App\Http\Controllers\Pengguna\PetaController as PenggunaPeta;
-use App\Http\Controllers\Pengguna\PeringatanController as PenggunaPeringatan;
+use App\Http\Controllers\Pengguna\ProfileController as PenggunaProfile;
 use App\Http\Controllers\Pengguna\LaporanController as PenggunaLaporan;
+use App\Http\Controllers\Pengguna\RekapitulasiController as PenggunaRekapitulasi;
 
-// --- RUTE PUBLIK ---
+
+//  RUTE PUBLIK 
+
 Route::get('/', function () {
     return redirect('/login');
 });
@@ -26,7 +27,9 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
-// ---  ADMIN  ---
+
+// RUTE ADMIN 
+
 Route::middleware('auth')->group(function () {
     
     // Dashboard & Profil Admin
@@ -44,66 +47,42 @@ Route::middleware('auth')->group(function () {
     Route::put('/users/{id}', [UserController::class, 'update']);
     Route::delete('/users/{id}', [UserController::class, 'destroy']);
 
-    // Manajemen Peta (Admin)
-    Route::get('/peta', [PetaController::class, 'index'])->name('peta.index');
-    Route::get('/peta/lihat', [PetaController::class, 'lihat'])->name('peta.lihat');
-    Route::get('/peta/kelola', [PetaController::class, 'kelola'])->name('peta.kelola');
-    Route::put('/peta/update/{id}', [PetaController::class, 'update'])->name('peta.update');
-
-    // Peringatan Bencana (Admin)
-    Route::get('/peringatan', [PeringatanController::class, 'index'])->name('peringatan.index');
-    Route::post('/peringatan', [PeringatanController::class, 'store'])->name('peringatan.store');
-
     // Laporan Bencana (Admin)
-    Route::get('/laporan', [App\Http\Controllers\Admin\LaporanController::class, 'index'])->name('admin.laporan.index'); 
-    Route::get('/laporan/peta', [App\Http\Controllers\Admin\LaporanController::class, 'peta'])->name('admin.laporan.peta');
-    Route::get('/laporan/{id}/detail', [App\Http\Controllers\Admin\LaporanController::class, 'show'])->name('admin.laporan.show');
-    Route::get('/laporan/{id}/pdf', [App\Http\Controllers\Admin\LaporanController::class, 'downloadPdf'])->name('admin.laporan.pdf');
-    Route::patch('/laporan/{id}/selesai', [App\Http\Controllers\Admin\LaporanController::class, 'tandaiSelesai'])->name('admin.laporan.selesai');
-
-}); // 
-
-
-// ---  PENGGUNA  ---
-    Route::prefix('pengguna')->middleware('auth')->group(function () {
+    Route::get('/laporan', [LaporanController::class, 'index'])->name('admin.laporan.index'); 
+    Route::get('/laporan/peta', [LaporanController::class, 'peta'])->name('admin.laporan.peta');
+    Route::get('/laporan/{id}/detail', [LaporanController::class, 'show'])->name('admin.laporan.show');
+    Route::get('/laporan/{id}/pdf', [LaporanController::class, 'downloadPdf'])->name('admin.laporan.pdf');
+    Route::patch('/laporan/{id}/selesai', [LaporanController::class, 'tandaiSelesai'])->name('admin.laporan.selesai');
     
-    // Dashboard Pengguna
+    
+    // Rekapitulasi Laporan (Admin)
+    Route::get('/rekapitulasi', [RekapitulasiController::class, 'index'])->name('admin.rekapitulasi.index');
+    Route::get('/rekapitulasi/cetak', [RekapitulasiController::class, 'cetak'])->name('admin.rekapitulasi.cetak');
+}); 
+
+
+// RUTE PENGGUNA 
+
+Route::prefix('pengguna')->middleware('auth')->group(function () {
+    
+    // Dashboard & Profil Pengguna
     Route::get('/dashboard', [PenggunaDashboard::class, 'index'])->name('pengguna.dashboard');
+    Route::get('/profile', [PenggunaProfile::class, 'index'])->name('pengguna.profile.index');
+    Route::post('/profile', [PenggunaProfile::class, 'update'])->name('pengguna.profile.update');
     
-    // Peta Pengguna
-    Route::get('/peta', [PenggunaPeta::class, 'index'])->name('pengguna.peta.index');
-    Route::get('/peta/lihat', [PenggunaPeta::class, 'lihat'])->name('pengguna.peta.lihat');
-
-    // Peringatan Pengguna
-    Route::get('/peringatan', [PenggunaPeringatan::class, 'index'])->name('pengguna.peringatan.index');
-    Route::post('/peringatan/konfirmasi/{id}', [PenggunaPeringatan::class, 'konfirmasi'])->name('pengguna.peringatan.konfirmasi');
-  
-    // Rute Dashboard & Log Laporan
+    // Laporan Bencana (Pengguna)
     Route::get('/laporan', [PenggunaLaporan::class, 'index'])->name('pengguna.laporan.index');
-
-    // Rute Buat Laporan Baru
+    Route::get('/laporan/peta', [PenggunaLaporan::class, 'peta'])->name('pengguna.laporan.peta');
     Route::get('/laporan/create', [PenggunaLaporan::class, 'create'])->name('pengguna.laporan.create');
     Route::post('/laporan/store', [PenggunaLaporan::class, 'store'])->name('pengguna.laporan.store');
+    Route::get('/laporan/{id}/detail', [PenggunaLaporan::class, 'show'])->name('pengguna.laporan.show');
+    Route::get('/laporan/{id}/update', [PenggunaLaporan::class, 'createUpdate'])->name('pengguna.laporan.update_create');
+    Route::post('/laporan/{id}/update', [PenggunaLaporan::class, 'storeUpdate'])->name('pengguna.laporan.store_update');
+    Route::patch('/laporan/{id}/batal', [PenggunaLaporan::class, 'tandaiBatal'])->name('pengguna.laporan.batal');
+    Route::get('/laporan/sitrep/{update_id}/pdf', [PenggunaLaporan::class, 'downloadPdf'])->name('pengguna.laporan.pdf');
 
-    // Rute Peta 
-    Route::get('/laporan/peta', [PenggunaLaporan::class, 'peta'])->name('pengguna.laporan.peta');
-    Route::get('/laporan/{id}/update', [App\Http\Controllers\Pengguna\LaporanController::class, 'createUpdate'])->name('pengguna.laporan.update_create');
-    Route::post('/laporan/{id}/update', [App\Http\Controllers\Pengguna\LaporanController::class, 'storeUpdate'])->name('pengguna.laporan.update_store');
-
-    // Rute untuk melihat halaman detail laporan & pagination SitRep
-    Route::get('/laporan/{id}/detail', [App\Http\Controllers\Pengguna\LaporanController::class, 'show'])->name('pengguna.laporan.show');
-
-    // Rute asli untuk mendownload PDF
-    Route::get('/laporan/sitrep/{update_id}/pdf', [App\Http\Controllers\Pengguna\LaporanController::class, 'downloadPdf'])->name('pengguna.laporan.pdf');
+    // Rekapitulasi Laporan (Pengguna)
+    Route::get('/rekapitulasi', [PenggunaRekapitulasi::class, 'index'])->name('pengguna.rekapitulasi.index');
+    Route::get('/rekapitulasi/cetak', [PenggunaRekapitulasi::class, 'cetak'])->name('pengguna.rekapitulasi.cetak');
     
-    // Rute untuk menampilkan form update
-    Route::get('/pengguna/laporan/{id}/update', [LaporanController::class, 'createUpdate'])->name('pengguna.laporan.update_create');
-
-    // Rute untuk memproses form update (POST)
-    Route::post('/laporan/{id}/update', [App\Http\Controllers\Pengguna\LaporanController::class, 'storeUpdate'])->name('pengguna.laporan.store_update');
-
-    // Rute Edit Profil Pengguna
-    Route::get('/profile', [App\Http\Controllers\Pengguna\ProfileController::class, 'index'])->name('pengguna.profile.index');
-    Route::post('/profile', [App\Http\Controllers\Pengguna\ProfileController::class, 'update'])->name('pengguna.profile.update');
-
-    });
+});

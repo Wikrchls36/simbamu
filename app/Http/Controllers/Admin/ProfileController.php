@@ -24,7 +24,6 @@ class ProfileController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        // 1. Validasi 
         $request->validate([
             'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'password'    => 'nullable|min:8|confirmed',
@@ -35,7 +34,6 @@ class ProfileController extends Controller
 
         $isUpdated = false;
 
-        // 2. Logika Update Foto 
         if ($request->filled('cropped_photo')) {
             $image_parts = explode(";base64,", $request->cropped_photo);
             if (count($image_parts) == 2) {
@@ -51,20 +49,17 @@ class ProfileController extends Controller
                 $isUpdated = true;
             }
         }
-
-        // 4. Logika Update Password 
+ 
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
             $isUpdated = true;
         }
 
-        // 5. Simpan jika ada perubahan
         if ($isUpdated) {
             $user->save();
             return redirect()->back()->with('success', 'Profil berhasil diperbarui!');
         }
 
-        // Jika user klik simpan tapi tidak mengubah apa-apa
         return redirect()->back()->with('info', 'Tidak ada perubahan data yang disimpan.');
     }
 }

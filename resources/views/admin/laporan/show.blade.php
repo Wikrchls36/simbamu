@@ -30,13 +30,12 @@
         .stat-box { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 12px; padding: 15px; text-align: center; }
         .stat-box strong { font-size: 20px; color: #0047ba; display: block; line-height: 1.2; }
         .stat-box span { font-size: 12px; color: #6c757d; font-weight: 600; text-transform: uppercase; }
-        
         .info-label { font-size: 12px; color: #888; text-transform: uppercase; font-weight: 600; margin-bottom: 2px; }
         .info-value { font-size: 14px; color: #333; font-weight: 500; }
         .content-box { background-color: #fdfdfd; border: 1px solid #eee; padding: 15px; border-radius: 8px; text-align: justify; line-height: 1.6; color: #444; font-size: 14px; min-height: 50px;}
-        
         .table-doc th { background-color: #f8f9fa; font-size: 13px; color: #555; text-align: center; vertical-align: middle;}
         .table-doc td { font-size: 14px; color: #444; vertical-align: middle;}
+        .modal-image { max-width: 100%; max-height: 80vh; object-fit: contain; }
     </style>
 </head>
 <body>
@@ -55,7 +54,6 @@
 
     <div class="d-flex gap-2 overflow-auto pb-3 mb-2" style="scrollbar-width: thin;">
         @php
-            // TAKTIK JITU: Paksa urutkan data dari ID terkecil ke terbesar, lalu reset index
             $sortedUpdates = $laporan->updates->sortBy('id')->values();
         @endphp
         
@@ -71,9 +69,10 @@
     @if($currentSitrep)
     <div class="document-card overflow-hidden mb-5">
         
-        <div class="bg-light border-bottom p-3 px-4 d-flex justify-content-between align-items-center">
+        <div class="bg-light border-bottom p-3 px-4 d-flex justify-content-between align-items-center flex-wrap gap-2">
             <div class="text-muted small fw-medium">
-                <i class="fas fa-clock me-1"></i> Diperbarui: {{ \Carbon\Carbon::parse($currentSitrep->updated_at)->timezone('Asia/Jakarta')->locale('id')->translatedFormat('d F Y, H:i') }} WIB
+                <i class="fas fa-clock me-1"></i> Diperbarui: 
+                {{ \Carbon\Carbon::parse($currentSitrep->updated_at)->timezone('Asia/Jakarta')->locale('id')->translatedFormat('l, d F Y - H:i') }} WIB
             </div>
             <a href="{{ route('admin.laporan.pdf', $currentSitrep->id) }}" class="btn btn-primary btn-sm rounded-pill px-4 fw-bold shadow-sm" target="_blank">
                 <i class="fas fa-file-pdf me-2"></i> Download PDF
@@ -93,13 +92,13 @@
             <div class="doc-section-title">A. Informasi Kunci</div>
             
             <div class="row mb-4">
-                <div class="col-md-4 mb-3">
+                <div class="col-md-6 mb-3">
                     <div class="info-label">Jenis Bencana</div>
                     <div class="info-value fw-bold text-dark">{{ $laporan->jenis_bencana ?? '-' }}</div>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-6 mb-3">
                     <div class="info-label">Tanggal Keluar SitRep</div>
-                    <strong>{{ \Carbon\Carbon::parse($currentSitrep->tanggal_sitrep)->locale('id')->translatedFormat('d F Y') }}</strong>
+                    <div class="info-value fw-bold text-dark">{{ \Carbon\Carbon::parse($currentSitrep->tanggal_sitrep)->locale('id')->translatedFormat('d F Y') }}</div>
                 </div>
             </div>
 
@@ -207,7 +206,9 @@
                                 @if(!empty($kegiatan))
                                 <tr>
                                     <td>{{ $kegiatan }}</td>
+                                    
                                     <td class="text-center">{{ $pm_tanggal[$index] ?? '-' }}</td>
+                                    
                                     <td class="text-center">{{ $pm_jumlah[$index] ?? '-' }}</td>
                                 </tr>
                                 @endif
@@ -325,7 +326,6 @@
                 $lampirans = [];
                 $raw_foto = $currentSitrep->foto_dokumentasi ?? null;
                 
-                
                 if (is_string($raw_foto) && strpos($raw_foto, '[') === 0) {
                     $lampirans = json_decode($raw_foto, true);
                 } elseif (is_string($raw_foto) && !empty($raw_foto)) {
@@ -337,12 +337,27 @@
 
             @if(!empty($lampirans) && count($lampirans) > 0)
             <div class="mt-5 pt-4 border-top">
-                <h6 class="fw-bold text-dark mb-3"><i class="fas fa-paperclip me-2 text-primary"></i>Lampiran File / Dokumentasi</h6>
-                <div class="d-flex flex-wrap gap-2">
+                <h6 class="fw-bold text-dark mb-3"><i class="fas fa-image me-2 text-primary"></i>Lampiran Dokumentasi</h6>
+                <div class="row g-3">
                     @foreach($lampirans as $idx => $lampiran)
-                        <a href="{{ asset('storage/' . $lampiran) }}" target="_blank" class="btn btn-outline-primary shadow-sm">
-                            <i class="fas fa-external-link-alt me-2"></i> Lihat Lampiran {{ count($lampirans) > 1 ? $idx + 1 : 'Laporan' }}
-                        </a>
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#imageModal{{ $idx }}" class="d-block border rounded-3 overflow-hidden shadow-sm" style="height: 120px;">
+                                <img src="{{ asset('storage/' . $lampiran) }}" alt="Lampiran" class="w-100 h-100 object-fit-cover bg-light">
+                            </a>
+                        </div>
+
+                        <div class="modal fade" id="imageModal{{ $idx }}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                <div class="modal-content bg-transparent border-0">
+                                    <div class="modal-header border-0 pb-0">
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body text-center">
+                                        <img src="{{ asset('storage/' . $lampiran) }}" class="modal-image img-fluid rounded" alt="Dokumentasi Penuh">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     @endforeach
                 </div>
             </div>
@@ -355,7 +370,7 @@
         <i class="fas fa-exclamation-triangle fs-3 me-3 text-warning"></i>
         <div>
             <h6 class="fw-bold mb-1">SitRep Belum Tersedia</h6>
-            <p class="mb-0 text-muted">Belum ada update laporan yang dikirimkan.</p>
+            <p class="mb-0 text-muted">Belum ada update laporan yang dikirimkan oleh daerah terkait bencana ini.</p>
         </div>
     </div>
     @endif

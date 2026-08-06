@@ -9,18 +9,20 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    // 1. Menampilkan Tabel Daftar Pengguna
     public function index()
     {
-        // Ambil semua user KECUALI yang sedang login (Admin Wilayah) agar tidak terhapus sendiri
-        $users = User::where('id', '!=', auth()->id())->orderBy('created_at', 'desc')->get();
+        
+        $users = User::where('id', '!=', auth()->id())
+                     ->withCount(['laporans' => function ($query) {
+                     }]) 
+                     ->orderBy('created_at', 'desc')
+                     ->get();
+                     
         return view('admin.users.index', compact('users'));
     }
 
-    // 2. Menampilkan Form Tambah Pengguna
    public function create()
 {
-    // 1. Daftar lengkap 14 Kabupaten/Kota di Kalbar beserta koordinatnya
     $allRegencies = [
         'Kota Pontianak' => ['lat' => -0.0263, 'lng' => 109.3425],
         'Kubu Raya' => ['lat' => -0.3239, 'lng' => 109.3364],
@@ -38,10 +40,8 @@ class UserController extends Controller
         'Ketapang' => ['lat' => -1.8507, 'lng' => 109.9715]
     ];
 
-    // 2. Ambil daftar daerah yang sudah memiliki akun dari database
     $usedRegencies = \App\Models\User::whereNotNull('regency')->pluck('regency')->toArray();
 
-    // 3. untuk memfilter daerah yang belum terdaftar saja
     $regencies = array_filter($allRegencies, function($key) use ($usedRegencies) {
         return !in_array($key, $usedRegencies);
     }, ARRAY_FILTER_USE_KEY);
@@ -49,23 +49,23 @@ class UserController extends Controller
     return view('admin.users.create', compact('regencies'));
 }
 
-    // 3. Menyimpan Data Pengguna Baru ke Database
-    public function store(Request $request)
+   public function store(Request $request)
     {
-        // Validasi inputan dari form
         $request->validate([
             'regency' => 'required',
-            'email' => 'required|email|unique:users',
-            'no_whatsapp' => 'required',
+            'email' => 'required|email|unique:users,email', // Cek unik di tabel users
+            'no_whatsapp' => 'required|numeric|unique:users,no_whatsapp', // Cek unik nomor WA
             'password' => 'required|min:8|confirmed',
-            'password.min' => 'Password minimal harus 8 karakter',
+        ], [
+            
+            'email.unique' => 'Email ini sudah terdaftar di sistem.',
+            'no_whatsapp.unique' => 'Nomor WhatsApp ini sudah digunakan oleh daerah lain.',
+            'password.min' => 'Password minimal harus 8 karakter.',
             'password.confirmed' => 'Konfirmasi password tidak cocok.'
         ]);
 
-        // Memecah teks "Latitude,Longitude" dari form input hidden menjadi array
         $coords = explode(',', $request->coordinates);
 
-        // Simpan ke database
         User::create([
             'name' => 'MDMC ' . $request->regency, 
             'email' => $request->email,
@@ -78,7 +78,7 @@ class UserController extends Controller
 
         return redirect('/users')->with('success', 'Akun MDMC Daerah berhasil didaftarkan!');
     }
-    // Menghapus akun pengguna
+    
     public function destroy($id) 
     {
         $user = \App\Models\User::findOrFail($id);
@@ -87,30 +87,28 @@ class UserController extends Controller
         return redirect('/users')->with('success', 'Akun berhasil dihapus!');
     }
 
-
-    // Menampilkan Form Edit
     public function edit($id)
     {
         $user = User::findOrFail($id);
         return view('admin.users.edit', compact('user'));
     }
 
-    // Proses Update Data ke Database
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
 
-        
         $request->validate([
             'email' => 'required|email|unique:users,email,' . $id,
-            'no_whatsapp' => 'required|numeric',
+            'no_whatsapp' => 'required|numeric|unique:users,no_whatsapp,' . $id,
             'password' => 'nullable|min:8|confirmed', 
+        ], [
+            'email.unique' => 'Email ini sudah digunakan oleh daerah lain.',
+            'no_whatsapp.unique' => 'Nomor WhatsApp ini sudah terdaftar.'
         ]);
 
         $user->email = $request->email;
         $user->no_whatsapp = $request->no_whatsapp;
 
-        
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
         }

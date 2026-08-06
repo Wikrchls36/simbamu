@@ -37,7 +37,9 @@
         
         .table-doc th { background-color: #f8f9fa; font-size: 13px; color: #555; text-align: center; vertical-align: middle;}
         .table-doc td { font-size: 14px; color: #444; vertical-align: middle;}
-        .td-koordinat { font-size: 12px !important; font-family: monospace; color: #0047ba !important; font-weight: 600;}
+
+        /* CSS untuk Modal Image Viewer */
+        .modal-image { max-width: 100%; max-height: 80vh; object-fit: contain; }
     </style>
 </head>
 <body>
@@ -56,7 +58,6 @@
 
     <div class="d-flex gap-2 overflow-auto pb-3 mb-2" style="scrollbar-width: thin;">
         @php
-           
             $sortedUpdates = $laporan->updates->sortBy('id')->values();
         @endphp
         
@@ -72,9 +73,10 @@
     @if($currentSitrep)
     <div class="document-card overflow-hidden mb-5">
         
-        <div class="bg-light border-bottom p-3 px-4 d-flex justify-content-between align-items-center">
+        <div class="bg-light border-bottom p-3 px-4 d-flex justify-content-between align-items-center flex-wrap gap-2">
             <div class="text-muted small fw-medium">
-                <i class="fas fa-clock me-1"></i> Diperbarui: {{ \Carbon\Carbon::parse($currentSitrep->updated_at)->timezone('Asia/Jakarta')->locale('id')->translatedFormat('d F Y, H:i') }} WIB
+                <i class="fas fa-clock me-1"></i> Diperbarui: 
+                {{ \Carbon\Carbon::parse($currentSitrep->updated_at)->timezone('Asia/Jakarta')->locale('id')->translatedFormat('l, d F Y - H:i') }} WIB
             </div>
             @if(Auth::id() == $laporan->user_id)
             <a href="{{ route('pengguna.laporan.pdf', $currentSitrep->id) }}" class="btn btn-primary btn-sm rounded-pill px-4 fw-bold shadow-sm" target="_blank">
@@ -96,33 +98,29 @@
             <div class="doc-section-title">A. Informasi Kunci</div>
             
             <div class="row mb-4">
-                <div class="col-md-4 mb-3">
+                <div class="col-md-6 mb-3">
                     <div class="info-label">Jenis Bencana</div>
                     <div class="info-value fw-bold text-dark">{{ $laporan->jenis_bencana ?? '-' }}</div>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-6 mb-3">
                     <div class="info-label">Tanggal Keluar SitRep</div>
-                    <strong>{{ \Carbon\Carbon::parse($currentSitrep->tanggal_sitrep)->locale('id')->translatedFormat('d F Y') }}</strong>
+                    <div class="info-value fw-bold text-dark">{{ \Carbon\Carbon::parse($currentSitrep->tanggal_sitrep)->locale('id')->translatedFormat('d F Y') }}</div>
                 </div>
             </div>
 
             <p class="fw-bold text-primary mb-2 small"><i class="fas fa-clock me-2"></i>Waktu Kejadian</p>
             <div class="table-responsive mb-4">
                 <table class="table table-bordered table-doc">
-                    <thead><tr><th>Waktu Kejadian</th><th>Kejadian</th><th>Lokasi</th><th width="200">Koordinat Peta</th></tr></thead>
+                    <thead><tr><th>Waktu Kejadian</th><th>Kejadian</th><th>Lokasi</th></tr></thead>
                     <tbody>
                         @php 
                             $wk_waktu = is_string($currentSitrep->wk_waktu ?? null) ? json_decode($currentSitrep->wk_waktu, true) : ($currentSitrep->wk_waktu ?? []);
                             $wk_kejadian = is_string($currentSitrep->wk_kejadian ?? null) ? json_decode($currentSitrep->wk_kejadian, true) : ($currentSitrep->wk_kejadian ?? []);
                             $wk_lokasi = is_string($currentSitrep->wk_lokasi ?? null) ? json_decode($currentSitrep->wk_lokasi, true) : ($currentSitrep->wk_lokasi ?? []);
-                            
-                            
-                            $wk_latitude = is_string($currentSitrep->wk_latitude ?? null) ? json_decode($currentSitrep->wk_latitude, true) : ($currentSitrep->wk_latitude ?? []);
-                            $wk_longitude = is_string($currentSitrep->wk_longitude ?? null) ? json_decode($currentSitrep->wk_longitude, true) : ($currentSitrep->wk_longitude ?? []);
                         @endphp
 
                         @if(empty($wk_waktu) || (count($wk_waktu) == 1 && empty($wk_waktu[0])))
-                            <tr><td colspan="4" class="text-center text-muted">Tidak ada data terinput</td></tr>
+                            <tr><td colspan="3" class="text-center text-muted">Tidak ada data terinput</td></tr>
                         @else
                             @foreach($wk_waktu as $index => $waktu)
                                 @if(!empty($waktu))
@@ -130,13 +128,6 @@
                                     <td class="text-center">{{ $waktu }}</td>
                                     <td>{{ $wk_kejadian[$index] ?? '-' }}</td>
                                     <td>{{ $wk_lokasi[$index] ?? '-' }}</td>
-                                    <td class="text-center td-koordinat">
-                                        @if(!empty($wk_latitude[$index]) && !empty($wk_longitude[$index]))
-                                            {{ $wk_latitude[$index] }}, <br> {{ $wk_longitude[$index] }}
-                                        @else
-                                            <span class="text-muted" style="font-size: 10px; font-family: 'Poppins', sans-serif;">Belum Dipilih</span>
-                                        @endif
-                                    </td>
                                 </tr>
                                 @endif
                             @endforeach
@@ -207,7 +198,7 @@
             <div class="table-responsive">
                 <table class="table table-bordered table-doc">
                     <thead><tr><th>Kegiatan</th><th>Tanggal Kegiatan</th><th>Jumlah Penerima Manfaat</th></tr></thead>
-                    <tbody>
+                   <tbody>
                         @php 
                             $pm_kegiatan = is_string($currentSitrep->pm_kegiatan ?? null) ? json_decode($currentSitrep->pm_kegiatan, true) : ($currentSitrep->pm_kegiatan ?? []);
                             $pm_tanggal = is_string($currentSitrep->pm_tanggal ?? null) ? json_decode($currentSitrep->pm_tanggal, true) : ($currentSitrep->pm_tanggal ?? []);
@@ -221,7 +212,9 @@
                                 @if(!empty($kegiatan))
                                 <tr>
                                     <td>{{ $kegiatan }}</td>
+                            
                                     <td class="text-center">{{ $pm_tanggal[$index] ?? '-' }}</td>
+                                    
                                     <td class="text-center">{{ $pm_jumlah[$index] ?? '-' }}</td>
                                 </tr>
                                 @endif
@@ -350,12 +343,27 @@
 
             @if(!empty($lampirans) && count($lampirans) > 0)
             <div class="mt-5 pt-4 border-top">
-                <h6 class="fw-bold text-dark mb-3"><i class="fas fa-paperclip me-2 text-primary"></i>Lampiran File / Dokumentasi</h6>
-                <div class="d-flex flex-wrap gap-2">
+                <h6 class="fw-bold text-dark mb-3"><i class="fas fa-image me-2 text-primary"></i>Lampiran Dokumentasi</h6>
+                <div class="row g-3">
                     @foreach($lampirans as $idx => $lampiran)
-                        <a href="{{ asset('storage/' . $lampiran) }}" target="_blank" class="btn btn-outline-primary shadow-sm">
-                            <i class="fas fa-external-link-alt me-2"></i> Lihat Lampiran {{ count($lampirans) > 1 ? $idx + 1 : 'Laporan' }}
-                        </a>
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#imageModal{{ $idx }}" class="d-block border rounded-3 overflow-hidden shadow-sm" style="height: 120px;">
+                                <img src="{{ asset('storage/' . $lampiran) }}" alt="Lampiran" class="w-100 h-100 object-fit-cover bg-light">
+                            </a>
+                        </div>
+
+                        <div class="modal fade" id="imageModal{{ $idx }}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                <div class="modal-content bg-transparent border-0">
+                                    <div class="modal-header border-0 pb-0">
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body text-center">
+                                        <img src="{{ asset('storage/' . $lampiran) }}" class="modal-image img-fluid rounded" alt="Dokumentasi Penuh">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     @endforeach
                 </div>
             </div>
@@ -368,7 +376,7 @@
         <i class="fas fa-exclamation-triangle fs-3 me-3 text-warning"></i>
         <div>
             <h6 class="fw-bold mb-1">SitRep Belum Tersedia</h6>
-            <p class="mb-0 text-muted">Belum ada update laporan yang dikirimkan.</p>
+            <p class="mb-0 text-muted">Belum ada update laporan yang dikirimkan oleh daerah terkait bencana ini.</p>
         </div>
     </div>
     @endif

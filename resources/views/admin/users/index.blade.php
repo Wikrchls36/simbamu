@@ -23,8 +23,9 @@
         .nav {
             flex-grow: 1; 
             display: flex; flex-direction: column;
-            justify-content: space-evenly; 
+            justify-content: flex-start; 
             padding: 20px 0 40px 0;
+            gap: 15px;
         }
 
         .nav-item { padding: 0 15px; }
@@ -38,18 +39,15 @@
 
         #content { width: calc(100% - 280px); margin-left: 280px; transition: all 0.3s; min-height: 100vh; display: flex; flex-direction: column; }
         
-     
         .navbar { height: 70px; background: #fff; }
         .profile-img { width: 40px; height: 40px; border-radius: 50%; border: 1px solid #ddd; padding: 2px; object-fit: cover; }
         .profile-toggle-btn::after { display: none !important; }
         .profile-toggle-btn .profile-arrow { transition: transform 0.3s ease; }
         .profile-toggle-btn.show .profile-arrow { transform: rotate(180deg); }
 
-    
         .main-card { border: 1px solid #e0e0e0; border-radius: 12px; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
         .btn-tambah { background-color: #0d6efd; color: #fff; font-weight: 600; border-radius: 8px; transition: 0.2s; border: none; }
         .btn-tambah:hover { background-color: #0b5ed7; color: #fff !important; }
-        
         
         .btn-edit { 
             background-color: #00e600; 
@@ -87,9 +85,7 @@
             background-color: #d90000; 
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
         }
-       
 
-      
         #sidebarOverlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 999; display: none; }
         #sidebarOverlay.show { display: block; }
         @media (max-width: 992px) {
@@ -113,11 +109,10 @@
         </div>
         
         <ul class="nav">
-            <li class="nav-item"><a href="/dashboard" class="nav-link"><i class="fas fa-th-large me-3"></i> Beranda</a></li>
-            <li class="nav-item"><a href="/users" class="nav-link"><i class="fas fa-users-cog me-3"></i> Manajemen Pengguna</a></li>
-            <li class="nav-item"><a href="/peta" class="nav-link"><i class="fas fa-map-marked-alt me-3"></i> Peta Potensi Bencana</a></li>
-            <li class="nav-item"><a href="/peringatan" class="nav-link"><i class="fas fa-exclamation-triangle me-3"></i> Peringatan Bencana</a></li>
-            <li class="nav-item"><a href="/laporan" class="nav-link"><i class="fas fa-file-alt me-3"></i> Laporan Bencana</a></li>
+            <li class="nav-item"><a href="/dashboard" class="nav-link"><i class="fas fa-th-large fa-fw me-3"></i> Beranda</a></li>
+            <li class="nav-item"><a href="/users" class="nav-link"><i class="fas fa-users-cog fa-fw me-3"></i> Manajemen Pengguna</a></li>
+            <li class="nav-item"><a href="/laporan" class="nav-link"><i class="fas fa-file-alt fa-fw me-3"></i> Laporan Bencana</a></li>
+            <li class="nav-item"><a href="/rekapitulasi" class="nav-link"><i class="fas fa-chart-area fa-fw me-3"></i> Rekap Laporan</a></li>
         </ul>
     </nav>
 
@@ -157,7 +152,6 @@
         </nav>
 
         <div class="container-fluid p-4 flex-grow-1">
-            <h4 class="fw-bold mb-4" style="color: #111; text-transform: uppercase;">Manajemen Pengguna</h4>
 
             @if(session('success'))
                 <div class="alert alert-success alert-dismissible fade show shadow-sm border-0 rounded-3" role="alert" id="autoCloseAlert">
@@ -170,13 +164,14 @@
 
             <div class="main-card p-4">
                 <div class="table-responsive">
-                    <table class="table table-borderless mb-0">
-                        <thead>
+                    <table class="table table-borderless align-middle mb-0">
+                        <thead class="border-bottom">
                             <tr>
                                 <th width="5%">No</th>
-                                <th width="25%">Pengguna</th>
-                                <th width="30%">Email</th>
-                                <th width="25%">No WhatsApp</th>
+                                <th width="20%">Pengguna</th>
+                                <th width="25%">Email</th>
+                                <th width="20%">No WhatsApp</th>
+                                <th width="15%" class="text-center">Total Laporan</th>
                                 <th width="15%" class="text-center">Aksi</th>
                             </tr>
                         </thead>
@@ -184,21 +179,41 @@
                             @forelse ($users as $index => $u)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
-                                <td class="fw-medium">{{ $u->name }}</td>
-                                <td>{{ $u->email }}</td>
-                                <td>{{ $u->no_whatsapp ?? '-' }}</td>
+                                <td class="fw-medium text-dark">{{ $u->name }}</td>
+                                <td class="text-muted">{{ $u->email }}</td>
+                                
+                                <td>
+                                    @if($u->no_whatsapp)
+                                        @php
+                                            $noWaBersih = preg_replace('/[^0-9]/', '', $u->no_whatsapp);
+                                            $tampilWa = str_starts_with($noWaBersih, '62') ? '0' . substr($noWaBersih, 2) : $noWaBersih;
+                                            $linkWa = str_starts_with($noWaBersih, '0') ? '62' . substr($noWaBersih, 1) : $noWaBersih;
+                                        @endphp
+                                        <a href="https://wa.me/{{ $linkWa }}" target="_blank" class="text-decoration-none text-dark fw-medium btn btn-sm btn-light border shadow-sm rounded-pill px-3 py-1">
+                                            <i class="fab fa-whatsapp text-success me-1" style="font-size: 1.1em;"></i> {{ $tampilWa }}
+                                        </a>
+                                    @else
+                                        <span class="text-muted">-</span>
+                                    @endif
+                                </td>
+
+                                <td class="text-center">
+                                    <span class="badge bg-primary rounded-pill px-3 shadow-sm">{{ $u->laporans_count ?? 0 }}</span>
+                                </td>
+
                                 <td class="text-center">
                                     <a href="/users/{{ $u->id }}/edit" class="btn-edit shadow-sm" title="Edit"><i class="fas fa-pen fa-sm"></i></a>
-                                  <form action="{{ url('/users/' . $u->id) }}" method="POST" class="d-inline form-delete">
-                                      @csrf
-                                      @method('DELETE') <button type="button" class="btn-delete btn-hapus-custom" data-nama="{{ $u->name }}">
-                                     <i class="fas fa-trash"></i>
-                                     </button>
-                                  </form>
+                                    <form action="{{ url('/users/' . $u->id) }}" method="POST" class="d-inline form-delete">
+                                        @csrf
+                                        @method('DELETE') 
+                                        <button type="button" class="btn-delete btn-hapus-custom shadow-sm" data-nama="{{ $u->name }}">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                             @empty
-                            <tr><td colspan="5" class="text-center text-muted py-5">Belum ada akun daerah.</td></tr>
+                            <tr><td colspan="6" class="text-center text-muted py-5">Belum ada akun daerah.</td></tr>
                             @endforelse
                         </tbody>
                     </table>
@@ -217,7 +232,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    
     const sidebar = document.getElementById('sidebar');
     const sidebarCollapse = document.getElementById('sidebarCollapse');
     const closeSidebar = document.getElementById('closeSidebar');
@@ -236,7 +250,6 @@
     closeSidebar.addEventListener('click', hideSidebar);
     sidebarOverlay.addEventListener('click', hideSidebar);
 
-
     document.querySelectorAll('.btn-hapus-custom').forEach(button => {
         button.addEventListener('click', function(e) {
             const form = this.closest('.form-delete');
@@ -244,10 +257,10 @@
 
             Swal.fire({
                 title: 'Apakah Anda yakin?',
-                text: "Akun " + namaUser + " akan dihapus dari sistem!",
+                text: "Akun " + namaUser + " dan seluruh data laporannya akan dihapus!",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#0000ff', 
+                confirmButtonColor: '#0047ba', // Disesuaikan dengan warna tema MDMC
                 cancelButtonColor: '#aaa',
                 confirmButtonText: 'Ya, Hapus!',
                 cancelButtonText: 'Batal',
@@ -263,7 +276,6 @@
         });
     });
 
-   
     @if(session('success'))
         Swal.fire({
             icon: 'success',

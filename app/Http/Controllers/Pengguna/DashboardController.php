@@ -10,11 +10,16 @@ class DashboardController extends Controller
 {
     public function index()
     {
-       
-        // Jumlah Laporan
-        $jumlahLaporan = Laporan::where('user_id', Auth::id())->count();
+        $user = Auth::user();
+        $queryLaporan = Laporan::where('user_id', $user->id);
+        $jumlahLaporan = (clone $queryLaporan)->count();
+        $laporanBanjir = (clone $queryLaporan)->where('jenis_bencana', 'Banjir')->count();
+        $laporanKarhutla = (clone $queryLaporan)->where('jenis_bencana', 'Karhutla')->count();
+        $laporanAktif = (clone $queryLaporan)->where('status', 'Aktif')->count();
+        $laporanSelesai = (clone $queryLaporan)->where('status', 'Selesai')->count();
 
-        // Mengirim data jumlah laporan ke halaman dashboard
-        return view('pengguna.dashboard', compact('jumlahLaporan'));
+        return view('pengguna.dashboard', compact(
+            'user', 'jumlahLaporan', 'laporanBanjir', 'laporanKarhutla', 'laporanAktif', 'laporanSelesai'
+        ));
     }
 }

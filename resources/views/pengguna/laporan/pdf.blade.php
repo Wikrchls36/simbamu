@@ -4,33 +4,26 @@
     <meta charset="UTF-8">
     <title>SitRep MDMC - {{ $sitrep->laporan->jenis_bencana ?? 'Bencana' }}</title>
     <style>
-        /* BASE STYLING  */
+        
         body { margin: 0; padding: 20px; background-color: #525659; font-family: Arial, sans-serif; display: flex; justify-content: center; }
         #document-wrapper { width: 210mm; min-height: 297mm; background: white; padding: 15mm; box-sizing: border-box; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-
-        /* KOP SURAT */
         .kop-surat { display: flex; align-items: center; border-bottom: 3px solid #000; padding-bottom: 10px; margin-bottom: 15px; }
         .kop-surat img { height: 70px; margin-right: 20px; }
         .kop-teks h2 { font-size: 18px; color: #0047ba; margin: 0 0 3px 0; font-weight: bold; }
         .kop-teks h3 { font-size: 16px; color: #000; margin: 0 0 3px 0; font-weight: bold; }
-
-        /* TEKS & TABEL */
         .section-title { font-size: 13px; font-weight: bold; margin: 15px 0 10px 0; background: #e9ecef; padding: 6px 10px; border-left: 4px solid #0047ba; text-transform: uppercase; }
         .content-text { font-size: 12px; line-height: 1.6; text-align: justify; }
-        
         table.data-table { width: 100%; border-collapse: collapse; margin-top: 5px; font-size: 11px; table-layout: fixed; }
         table.data-table th, table.data-table td { border: 1px solid #000; padding: 6px 8px; text-align: left; vertical-align: middle; word-wrap: break-word; }
         table.data-table th { background-color: #f8f9fa; text-align: center; font-weight: bold; }
-        
         .info-grid { display: table; width: 100%; table-layout: fixed; margin-top: 5px; }
         .info-col { display: table-cell; width: 33.33%; padding-right: 5px; vertical-align: top; }
         .info-label { font-size: 10px; color: #666; text-transform: uppercase; font-weight: bold; display: block; margin-bottom: 3px; }
-        
         .foto-grid { text-align: center; margin-top: 20px; width: 100%; }
         .foto-item { display: inline-block; width: 45%; margin: 10px; vertical-align: top; }
         .foto-item img { max-width: 100%; max-height: 250px; border: 1px solid #000; padding: 2px; }
 
-        /*FUNGSI PRINT*/
+       
         @media print {
             body { background-color: #fff; padding: 0; display: block; }
             #document-wrapper { width: 100%; max-width: 100%; padding: 0; box-shadow: none; }
@@ -112,9 +105,21 @@
                                     <td align="center"><strong>{{ $sitrep->dampak_terdampak ?? 0 }}</strong></td>
                                 </tr>
                             </table>
+                            
                             <div class="content-text" style="margin-top: 8px;">
                                 <span class="info-label">Dampak Material</span>
                                 {!! nl2br(e($sitrep->dampak_material ?? 'Tidak ada laporan kerusakan material.')) !!}
+                            </div>
+                            
+                            <div class="info-grid" style="margin-top: 12px;">
+                                <div class="info-col" style="width: 50%;">
+                                    <span class="info-label">Lokasi Poskor Muhammadiyah</span>
+                                    <div class="content-text">{!! nl2br(e($sitrep->lokasi_poskor ?? '-')) !!}</div>
+                                </div>
+                                <div class="info-col" style="width: 50%;">
+                                    <span class="info-label">Lokasi Pos Pelayanan (Opsional)</span>
+                                    <div class="content-text">{!! nl2br(e($sitrep->lokasi_pos_pelayanan ?? '-')) !!}</div>
+                                </div>
                             </div>
                         </div>
 
@@ -131,7 +136,7 @@
                         <div class="blok-aman">
                             <div class="section-title">D. RESPON MUHAMMADIYAH</div>
                             <table class="data-table">
-                                <thead><tr><th>Kluster</th><th>Lokasi Respon</th><th>Penerima Manfaat / Keterangan</th></tr></thead>
+                                <thead><tr><th>Kluster</th><th>Lokasi</th><th>Penerima Manfaat / Keterangan</th></tr></thead>
                                 <tbody>
                                     @php 
                                         $resp_kluster = is_string($sitrep->resp_kluster ?? null) ? json_decode($sitrep->resp_kluster, true) : ($sitrep->resp_kluster ?? []);
@@ -150,7 +155,7 @@
                         <div class="blok-aman">
                             <div class="section-title">E. PENERIMA MANFAAT</div>
                             <table class="data-table">
-                                <thead><tr><th>Jenis Kegiatan</th><th>Tanggal</th><th>Jumlah Jiwa</th></tr></thead>
+                                <thead><tr><th>Kegiatan</th><th>Tanggal Kegiatan</th><th>Jumlah Penerima Manfaat </th></tr></thead>
                                 <tbody>
                                     @php 
                                         $pm_kegiatan = is_string($sitrep->pm_kegiatan ?? null) ? json_decode($sitrep->pm_kegiatan, true) : ($sitrep->pm_kegiatan ?? []);
@@ -159,7 +164,11 @@
                                     @endphp
                                     @foreach($pm_kegiatan as $index => $kegiatan)
                                         @if(!empty($kegiatan))
-                                        <tr><td>{{ $kegiatan }}</td><td align="center">{{ $pm_tanggal[$index] ?? '-' }}</td><td align="center">{{ $pm_jumlah[$index] ?? '-' }}</td></tr>
+                                        <tr>
+                                            <td>{{ $kegiatan }}</td>
+                                            <td align="center">{{ isset($pm_tanggal[$index]) && !empty($pm_tanggal[$index]) ? \Carbon\Carbon::parse($pm_tanggal[$index])->format('d-m-Y') : '-' }}</td>
+                                            <td align="center">{{ $pm_jumlah[$index] ?? '-' }}</td>
+                                        </tr>
                                         @endif
                                     @endforeach
                                 </tbody>
@@ -167,28 +176,55 @@
                         </div>
 
                         <div class="blok-aman">
-                            <div class="section-title">F. TIM RESPON</div>
+                            <div class="section-title">F. TIM RESPON MDMC</div>
                             <table class="data-table">
-                                <thead><tr><th>Kluster Tim</th><th>Total</th><th>Pulang</th><th>Bertugas</th></tr></thead>
+                                <thead><tr><th>Kluster</th><th>Total</th><th>Pulang</th><th>Bertugas</th></tr></thead>
                                 <tbody>
                                     @php 
                                         $tim_kluster = is_string($sitrep->tim_kluster ?? null) ? json_decode($sitrep->tim_kluster, true) : ($sitrep->tim_kluster ?? []);
                                         $tim_total = is_string($sitrep->tim_total ?? null) ? json_decode($sitrep->tim_total, true) : ($sitrep->tim_total ?? []);
+                                        $tim_pulang = is_string($sitrep->tim_pulang ?? null) ? json_decode($sitrep->tim_pulang, true) : ($sitrep->tim_pulang ?? []);
                                         $tim_bertugas = is_string($sitrep->tim_bertugas ?? null) ? json_decode($sitrep->tim_bertugas, true) : ($sitrep->tim_bertugas ?? []);
                                     @endphp
-                                    @foreach($tim_kluster as $index => $kluster)
-                                        @if(!empty($kluster))
-                                        <tr><td>{{ $kluster }}</td><td align="center">{{ $tim_total[$index] ?? '0' }}</td><td align="center">-</td><td align="center">{{ $tim_bertugas[$index] ?? '0' }}</td></tr>
-                                        @endif
-                                    @endforeach
+                                    @if(is_array($tim_kluster))
+                                        @foreach($tim_kluster as $index => $kluster)
+                                            @if(!empty($kluster))
+                                            <tr>
+                                                <td>{{ $kluster }}</td>
+                                                <td align="center">{{ $tim_total[$index] ?? '0' }}</td>
+                                                <td align="center">{{ $tim_pulang[$index] ?? '0' }}</td>
+                                                <td align="center">{{ $tim_bertugas[$index] ?? '0' }}</td>
+                                            </tr>
+                                            @endif
+                                        @endforeach
+                                    @endif
                                 </tbody>
                             </table>
+
+                            <div class="info-grid" style="margin-top: 10px; background-color: #f8f9fa; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                                <div class="info-col" style="width: 25%;">
+                                    <span class="info-label">Total</span>
+                                    <strong>{{ $sitrep->tim_total_semua ?? '0' }}</strong> Orang
+                                </div>
+                                <div class="info-col" style="width: 25%;">
+                                    <span class="info-label">Laki-Laki</span>
+                                    <strong>{{ $sitrep->tim_laki ?? '0' }}</strong> Orang
+                                </div>
+                                <div class="info-col" style="width: 25%;">
+                                    <span class="info-label">Perempuan</span>
+                                    <strong>{{ $sitrep->tim_perempuan ?? '0' }}</strong> Orang
+                                </div>
+                                <div class="info-col" style="width: 25%;">
+                                    <span class="info-label">Asal Instansi</span>
+                                    <strong>{{ $sitrep->asal_instansi ?? '-' }}</strong>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="blok-aman">
                             <div class="section-title">G. KEBUTUHAN</div>
                             <table class="data-table">
-                                <thead><tr><th>Item Kebutuhan</th><th>Jumlah / Satuan</th></tr></thead>
+                                <thead><tr><th>Kebutuhan</th><th>Jumlah Kebutuhan</th></tr></thead>
                                 <tbody>
                                     @php 
                                         $keb_item = is_string($sitrep->keb_item ?? null) ? json_decode($sitrep->keb_item, true) : ($sitrep->keb_item ?? []);
@@ -213,7 +249,7 @@
                         <div class="blok-aman">
                             <div class="section-title">I. CONTACT PERSON</div>
                             <table class="data-table">
-                                <thead><tr><th>Nama Petugas</th><th>No. Telepon / HP</th></tr></thead>
+                                <thead><tr><th>Petugas</th><th>No. Telepon / HP</th></tr></thead>
                                 <tbody>
                                     @php 
                                         $cp_nama = is_string($sitrep->cp_nama ?? null) ? json_decode($sitrep->cp_nama, true) : ($sitrep->cp_nama ?? []);

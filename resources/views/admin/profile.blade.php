@@ -142,7 +142,7 @@
         }
     }
 
-    // Animasi SweetAlert2 Sukses
+    
     @if(session('success'))
         Swal.fire({
             icon: 'success',
@@ -156,7 +156,6 @@
         });
     @endif
 
-    // LOGIKA CROPPER JS
     let cropper;
     const profilePhotoInput = document.getElementById('profile_photo');
     const imageToCrop = document.getElementById('imageToCrop');
